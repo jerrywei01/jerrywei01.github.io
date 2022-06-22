@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>数据库原理与应用 第9节 | JerryWei&#39;s Web</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Bentham&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Bentham&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">数据库原理与应用 第9节</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 22, 2022&nbsp;&nbsp;9:55:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/">课堂笔记</a>
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/2022%E6%98%A5%E5%AD%A3%E5%AD%A6%E6%9C%9F/">2022春季学期</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="数据库原理与应用-第9节"><a href="#数据库原理与应用-第9节" class="headerlink" title="数据库原理与应用 第9节"></a>数据库原理与应用 第9节</h1><h2 id="第八章-系统恢复"><a href="#第八章-系统恢复" class="headerlink" title="第八章 系统恢复"></a>第八章 系统恢复</h2><p>计算机系统故障是不可避免的。发生故障的原因多样，如<u>硬件故障</u>、<u>恶意破坏</u>等。一旦故障发生，会对数据库中的数据造成破坏，因此，DBMS必须采取措施，以保障即使发生故障，也必须使数据库恢复到故障发生前的某一个状态，称为系统恢复技术。</p>
+<ol>
+<li><p><strong>单纯以后备复本为基础的恢复技术</strong></p>
+<p><strong>周期性</strong>地把数据库中数据<strong>转储到磁盘</strong>上。这就是<strong>后备复本</strong>。复本虽造成<strong>数据冗余</strong>，但是对恢复来说是必需的。当数据库失效时，可取最近的后备复本来恢复数据库。</p>
+<p>缺点：最近后备复本至发生故障期间所发生的数据库更 新就会丢失，且取后备复本的周期愈长，丢失的数据更新也 就愈多</p>
+</li>
+<li><p><strong>以后备复本和运行记录为基础的恢复技术</strong></p>
+<ol>
+<li><p><strong>前像</strong> </p>
+<p>当数据库被一个事务更新时，所涉及的物理块被更新前的映像称为该事务的前像。</p>
+</li>
+<li><p><strong>后像</strong></p>
+<p>当数据库被一个事务更新时，所涉及的物理块被更新后的映像称为该事务的后像。</p>
+</li>
+<li><p><strong>系统恢复</strong></p>
+<ol>
+<li><p><strong>执行commit前</strong>数据已保存到数据库，但此时还未执行commit 发生了故障； 执行<strong>undo</strong>操作。 以前像为参照，<strong>反向扫描日志</strong>，做逆操作恢复数据。 </p>
+</li>
+<li><p><strong>执行commit后</strong>数据才会被保存到数据库，但在commit之后保存数据库之前发生了故障； 执行<strong>redo</strong>操作。 以后像为参照，<strong>正向扫描日志</strong>。</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p><strong>基于多副本的恢复技术</strong></p>
+<p>如果系统中有多个数据库副本，可以利用这些副本互为备 份，用于恢复。常用于分布式数据库系统中。 读数据时，可以选择其中任一个结点上的数据； 写数据时，每个结点都写入同样的内容。</p>
+</li>
+</ol>
+<p>例：有某数据库系统在运行过程中发生了系统故障，发生故障时正在运行事务t1和t2。进行故障恢复时，在日志文件中发现有t1事务的开始记录而没有结束记录；有t2的开始记录和结束记录，但 t2对数据库的修改还没有写到数据库中。如何恢复数据库到一致状态？</p>
+<p><img src="/../images/image-20220524143156083.png" alt="image-20220524143156083"></p>
+<p>例：写一个事务执行售票点售票功能。每个售票点售票完成需要2个步骤， 首先查看数据库中票的张数是否大于0，如果大于0，则售票后更新数据库票的张数。售票信息存在表Ticket(TicketInfo，TicketLeaveNum)中</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> PROC prcSellTicket</span><br><span class="line">	<span class="variable">@TicketInfo</span> <span class="type">VARCHAR</span>(<span class="number">20</span>), <span class="comment">--车次信息</span></span><br><span class="line">	<span class="variable">@TikectNum</span> <span class="type">INT</span>			 <span class="comment">--售出张数</span></span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">BEGIN</span> TRAN</span><br><span class="line">	<span class="keyword">DECLARE</span> <span class="variable">@TicketLeaveNum</span> <span class="type">INT</span></span><br><span class="line">	<span class="keyword">SELECT</span> <span class="variable">@TicketLeaveNum</span> <span class="operator">-</span> TicketLeaveNum <span class="keyword">FROM</span> ticket</span><br><span class="line">	<span class="keyword">WHERE</span> TicketInfo <span class="operator">-</span> <span class="variable">@TicketInfo</span></span><br><span class="line">	WAITFOR DELAY <span class="string">&#x27;00:00:20.005&#x27;</span></span><br><span class="line">	<span class="keyword">UPDATE</span> TICKET <span class="keyword">SET</span> TicketLeaveNum <span class="operator">=</span> <span class="variable">@TicketLeaveNum</span> <span class="operator">-</span> <span class="variable">@TicketLeaveNum</span></span><br><span class="line">	<span class="keyword">WHERE</span> TicketInfo <span class="operator">=</span> <span class="variable">@TicketInfo</span></span><br><span class="line">IF(<span class="variable">@TicketLeaveNum</span> <span class="operator">&lt;</span> <span class="variable">@TicketNum</span> )</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">BEGIN</span> <span class="keyword">ROLLBACK</span> TRAN</span><br><span class="line">	PRINT <span class="string">&#x27;售票失败&#x27;</span></span><br><span class="line"><span class="keyword">END</span></span><br><span class="line"><span class="keyword">ELSE</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">BEGIN</span> <span class="keyword">COMMIT</span> TRAN</span><br><span class="line">	PRINT <span class="string">&#x27;售票成功&#x27;</span></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h1><p>多个用户在执行相同的事务时，会导致数据库中的数据发生错误信息，这种情况称为事务的并发。</p>
+<h2 id="事务的并发"><a href="#事务的并发" class="headerlink" title="事务的并发"></a>事务的并发</h2><p>多个用户在<strong>执行相同的事务</strong>时，事务会<strong>产生并发情况</strong>， 从而导致数据库中的数据发生错误信息，实际中我们应该考虑到并发的存在，并试图解决这种并发情况。</p>
+<p>解决方案： 1.锁机制 	2.设置事务的隔离级别</p>
+<h2 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a>锁机制</h2><h3 id="共享锁"><a href="#共享锁" class="headerlink" title="共享锁"></a>共享锁</h3><p><strong>共享锁</strong>又称为<strong>读</strong>锁。</p>
+<p>若事务T对数据对象A加上<strong>S锁</strong>，则事务T可以读A但不能修改A，其他事务只能再对A加S锁，而不能加X锁，直到T读完释放A上的S锁。这就保证了其他事务可以读A，但在T释放A上的S锁之前不能对A做任何的修改。</p>
+<h3 id="排它锁"><a href="#排它锁" class="headerlink" title="排它锁"></a>排它锁</h3><p><strong>排它锁</strong>又称为<strong>写</strong>锁。</p>
+<p>若事务T对数据对象A加上<strong>X锁</strong>，则只允许T<strong>读取</strong>和<strong>修改</strong>A，其他任何事务都不能再对A加任何类型的锁，直到T释放A上的锁。这就保证了其他事务在T释放A上的锁之前不能再读取和修改A。</p>
+<table>
+<thead>
+<tr>
+<th>T1 T2</th>
+<th>S</th>
+<th>X</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>修改后的事务——锁机制</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> PROC prcSellTicket</span><br><span class="line">	<span class="variable">@TicketInfo</span> <span class="type">VARCHAR</span>(<span class="number">20</span>), <span class="comment">--车次信息</span></span><br><span class="line">	<span class="variable">@TikectNum</span> <span class="type">INT</span>			 <span class="comment">--售出张数</span></span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">BEGIN</span> TRAN</span><br><span class="line">	<span class="keyword">SELECT</span> TicketLeaveNum <span class="keyword">FROM</span> ticket <span class="keyword">with</span> (tablockx)	<span class="comment">--在事务开始后增加排它锁</span></span><br><span class="line">	<span class="keyword">DECLARE</span> <span class="variable">@TicketLeaveNum</span> <span class="type">INT</span></span><br><span class="line">	<span class="keyword">SELECT</span> <span class="variable">@TicketLeaveNum</span> <span class="operator">-</span> TicketLeaveNum <span class="keyword">FROM</span> ticket</span><br><span class="line">	<span class="keyword">WHERE</span> TicketInfo <span class="operator">-</span> <span class="variable">@TicketInfo</span></span><br><span class="line">	WAITFOR DELAY <span class="string">&#x27;00:00:20.005&#x27;</span></span><br><span class="line">	<span class="keyword">UPDATE</span> TICKET <span class="keyword">SET</span> TicketLeaveNum <span class="operator">=</span> <span class="variable">@TicketLeaveNum</span> <span class="operator">-</span> <span class="variable">@TicketLeaveNum</span></span><br><span class="line">	<span class="keyword">WHERE</span> TicketInfo <span class="operator">=</span> <span class="variable">@TicketInfo</span></span><br><span class="line">IF(<span class="variable">@TicketLeaveNum</span> <span class="operator">&lt;</span> <span class="variable">@TicketNum</span> )</span><br><span class="line">    <span class="keyword">BEGIN</span></span><br><span class="line">        <span class="keyword">BEGIN</span> <span class="keyword">ROLLBACK</span> TRAN</span><br><span class="line">        PRINT <span class="string">&#x27;售票失败&#x27;</span></span><br><span class="line">    <span class="keyword">END</span></span><br><span class="line"><span class="keyword">ELSE</span></span><br><span class="line">    <span class="keyword">BEGIN</span></span><br><span class="line">        <span class="keyword">BEGIN</span> <span class="keyword">COMMIT</span> TRAN</span><br><span class="line">        PRINT <span class="string">&#x27;售票成功&#x27;</span></span><br><span class="line">    <span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="一级、二级、三级封锁协议"><a href="#一级、二级、三级封锁协议" class="headerlink" title="一级、二级、三级封锁协议"></a>一级、二级、三级封锁协议</h2><p>锁协议：加锁会降低事务的并发性；而锁协议<strong>保证事务的一致性的前提</strong>下尽可能地<strong>提高并发性</strong>。</p>
+<ul>
+<li><p><strong>一级封锁协议</strong></p>
+<ul>
+<li>事务在修改数据对象前必须对其加X锁，<strong>直到事务结束才释放</strong>。事务结束包括正常结束（commit）和非正常结束（rollback）。<em>如果只是读取数据不修改，是不需要加锁的</em></li>
+<li>一级协议保证了修改不会丢失，但无法保证重复读，不脏读和不发生幻读。</li>
+</ul>
+</li>
+<li><p><strong>二级封锁协议</strong></p>
+<ul>
+<li>一级封锁协议加上事务读取事务前必须对其加S锁，<strong>读完后方可释放S锁</strong>。</li>
+<li>二级协议除保护了不会丢失修改，还防止了读“脏”数据，不能保证可重复读和不发生幻读。</li>
+</ul>
+</li>
+<li><p><strong>三级封锁协议</strong></p>
+<ul>
+<li>一级封锁协议加上事务在读取数据前必须对其加S锁，<strong>直到事务结束才释放</strong>。</li>
+<li>三级协议保证了四种错误均不会发生。最安全的一种锁协议。</li>
+</ul>
+</li>
+</ul>
+<p>设置事务的隔离级别</p>
+<p>处理并发问题的另一途径。	</p>
+<p>- 未提交读（read uncommitted）：</p>
+<table>
+<thead>
+<tr>
+<th>当前事务</th>
+<th>其他事务（设置隔离级别）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读</td>
+<td>能读，能修改</td>
+</tr>
+<tr>
+<td>修改</td>
+<td>能读，不能修改（可插入）</td>
+</tr>
+</tbody></table>
+<p>- 已提交读（read committed）：</p>
+<table>
+<thead>
+<tr>
+<th>当前事务</th>
+<th>其他事务（设置隔离级别）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读</td>
+<td>能读，能修改</td>
+</tr>
+<tr>
+<td>可修改</td>
+<td>不能读，不能修改（可插入）</td>
+</tr>
+</tbody></table>
+<p>- 可重复读（repeatable read）：</p>
+<table>
+<thead>
+<tr>
+<th>当前事务（设置隔离级别）</th>
+<th>其他事务（设置隔离级别）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读</td>
+<td>能读，不能修改（可插入）</td>
+</tr>
+<tr>
+<td>修改</td>
+<td>不能读，不能修改（可插入）</td>
+</tr>
+</tbody></table>
+<p>- 可序列化（serializable）：</p>
+<table>
+<thead>
+<tr>
+<th>当前事务</th>
+<th>其他事务（设置隔离级别）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>执行操作</td>
+<td>禁止并发执行操作</td>
+</tr>
+</tbody></table>
+<blockquote>
+</blockquote>
+<h2 id="并发问题的控制——隔离级别"><a href="#并发问题的控制——隔离级别" class="headerlink" title="并发问题的控制——隔离级别"></a>并发问题的控制——隔离级别</h2><h4 id="（1）未提交读-read-uncommitted"><a href="#（1）未提交读-read-uncommitted" class="headerlink" title="（1）未提交读(read uncommitted)"></a>（1）未提交读(read uncommitted)</h4><p>​	当前事务对行所作的更改在被提交之前对于使用未提交读隔离级别的事务是可见的。</p>
+<h4 id="（2）已提交读-read-committed"><a href="#（2）已提交读-read-committed" class="headerlink" title="（2）已提交读(read committed)"></a>（2）已提交读(read committed)</h4><p>​	当前事务对行所作的更改在被提交之后对于使用已提交读隔离级别的事务是可见的。能防止脏读。</p>
+<h4 id="（3）可重复读-repeatable-read"><a href="#（3）可重复读-repeatable-read" class="headerlink" title="（3）可重复读(repeatable read)"></a>（3）可重复读(repeatable read)</h4><p>​	当使用可重复读隔离级别时，在事务执行期间会锁定该事 务以任何方式引用的所有行 ，可解决丢失更新，脏读，不可重复读。</p>
+<h4 id="（4）可序列化-serializable"><a href="#（4）可序列化-serializable" class="headerlink" title="（4）可序列化(serializable)"></a>（4）可序列化(serializable)</h4><p>​	当前事务执行完另一事务才能开始，可解决所有并发情况</p>
+<h3 id="事务隔离级别与并发情况表："><a href="#事务隔离级别与并发情况表：" class="headerlink" title="事务隔离级别与并发情况表："></a>事务隔离级别与并发情况表：</h3><table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>丢失更新</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>未提交读</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>已提交读</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>可重复读</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>序列化</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>事务隔离级别越高，事务执行效率越低。实际开发中，因根据情况合理设置隔离级别。</p>
+</blockquote>
+<h2 id="事务的并发-1"><a href="#事务的并发-1" class="headerlink" title="事务的并发"></a>事务的并发</h2><p>并非所有并行执行的多个事务都会产生并发情况，如 果多个事务同时执行并不会产生并发错误，那么加上锁或 隔离级别会降低执行效率。如何有效地判断多个事务是否会并发呢？ 事务并发产生的错误主要有三类：丢失更新、不可重复读和脏读。</p>
+<ol>
+<li><p>脏数据所指的就是未提交的数据。也就是说，一个事务正在对一条记录做修改，在这个事务完成并提交之前，这条数据是处于待定状态的（可能提交也可能回滚），这时，第二个事务来读取这条没有提交的数据，并据此做进一步的处理，就会产生未提交的数据依赖关系。这种现象被称为脏读。</p>
+</li>
+<li><p>不可重复读（Non-Repeatable Reads）：一个事务先后读取同一条记录，而事务在两次读取之间该数据被其它事务所修改，则两次读取的数据不同，我们称之为不可重复读。</p>
+</li>
+<li><p>幻读（Phantom Reads）：一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为幻读。</p>
+</li>
+<li><p>幻读是指当事务不是独立执行时发生的一种现象，例如第一个事务对一个表中的数据进行了修改，比如这种修改涉及到表中的“全部数据行”。同时，第二个事务也修改这个表中的数据，这种修改是向表中插入“一行新数据”。那么，以后就会发生操作第一个事务的用户发现表中还存在没有修改的数据行，就好象发生了幻觉一样.一般解决幻读的方法是增加范围锁RangeS，锁定检索范围为只读，这样就避免了幻读。</p>
+</li>
+</ol>
+<p>&#x3D;&#x3D;DBMS把<strong>可串行化</strong>作为并发控制正确性的准则，判断是否可串行化的方法是<strong>前趋图</strong>&#x3D;&#x3D;</p>
+<p>练习一：</p>
+<p><img src="/../images/image-20220524151308997.png" alt="image-20220524151308997"></p>
+<p><img src="/../images/image-20220524151842817.png" alt="image-20220524151842817"></p>
+<p><img src="/../images/image-20220524152702404.png" alt="image-20220524152702404"></p>
+<p><img src="/../images/image-20220524152654568.png" alt="image-20220524152654568"></p>
+<p><img src="/../images/image-20220524153431103.png" alt="image-20220524153431103"></p>
+<h3 id="补充：死锁与活锁"><a href="#补充：死锁与活锁" class="headerlink" title="补充：死锁与活锁"></a>补充：死锁与活锁</h3><ul>
+<li><p>死锁</p>
+<ul>
+<li>两个用户（或事务）在个别的对象的上 锁，并且每个用户正在等待另一个对象的锁。两个事务处于无 限制的等待状态中，称为死锁。</li>
+</ul>
+</li>
+<li><p>活锁</p>
+<ul>
+<li>若某数据对象加了S锁，这时若有其他 事务申请对它的X锁，则必须等待。如果不断有事务申请对此 数据对象的S锁，以致它始终被S锁占有，而X锁定申请迟迟不 能获准。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../images/image-20220524153920933.png" alt="image-20220524153920933"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(9%E8%8A%82)/">http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(9%E8%8A%82)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/"># 数据库原理与应用</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(%E7%AC%AC10%E8%8A%82)/">数据库原理与应用 第10节</a>
+            
+            
+            <a class="next" rel="next" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8%EF%BC%88%E5%A4%8D%E4%B9%A0%EF%BC%89/">数据库原理与应用（复习）</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

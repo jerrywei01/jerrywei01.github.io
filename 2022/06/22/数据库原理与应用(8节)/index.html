@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>数据库原理与应用 第8节 | JerryWei&#39;s Web</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Bentham&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Bentham&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">数据库原理与应用 第8节</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 22, 2022&nbsp;&nbsp;9:55:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/">课堂笔记</a>
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/2022%E6%98%A5%E5%AD%A3%E5%AD%A6%E6%9C%9F/">2022春季学期</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="数据库原理与应用-第8节"><a href="#数据库原理与应用-第8节" class="headerlink" title="数据库原理与应用 第8节"></a>数据库原理与应用 第8节</h1><h2 id="第七章-事物的概念及创建"><a href="#第七章-事物的概念及创建" class="headerlink" title="第七章 事物的概念及创建"></a>第七章 事物的概念及创建</h2><h2 id="8-1-事务的概念及应用"><a href="#8-1-事务的概念及应用" class="headerlink" title="8.1 事务的概念及应用"></a>8.1 事务的概念及应用</h2><p>SQL Server提供了一种叫做<strong>事务</strong>的机制，它可以保证指定的对数据库的一系列操作<strong>作为一个整体被执行</strong>，在最终提交操作之间，用户可以随时取消前面的操作，将数据库<strong>还原到没有执行操作前的状态</strong>，或者操作全部完成，将<strong>所有的操作提交到数据库</strong>。</p>
+<p><strong>事务的属性</strong>：</p>
+<ul>
+<li><strong>原子性</strong>：事务必须是原子工作单元。它对数据库所进行的操作，要么全都执行，要么全都不执行</li>
+<li><strong>一致性</strong>：事务在完成时，必须使所有的数据都保持一致状态。在相关数据库中，所有规则都必须应用于事务的修改，以保持所有数据的完整性。事务结束时，所有的内部数据结构（B数索引）都必须是正确的</li>
+<li><strong>隔离性</strong>： 由<strong>并发事务</strong>所作的修改必须与任何其他并发事务所作的修改隔离。事务查看数据时数据所处的状态，要么是另一并发事务修改它之前的状态，要么是另一事务修改它之后的状态，事务不会查看中间状态的数据</li>
+<li><strong>持久性</strong>：事务完成之后，它对于系统的影响是永久性的。该修改即使出现系统故障也将一直保持</li>
+</ul>
+<p><strong>SQL SERVER常见的的三种事务</strong>：</p>
+<ol>
+<li><strong>自动提交事务</strong>：默认的一种事务模式</li>
+<li><strong>显式事务</strong>：由用户来设置什么时候开始与结束事务</li>
+<li><strong>隐式事务</strong>：将隐式事务模式打开，不用Begin Transaction开启事务</li>
+</ol>
+<h2 id="8-2-事务的操作"><a href="#8-2-事务的操作" class="headerlink" title="8.2 事务的操作"></a>8.2 事务的操作</h2><p>启动事务：<code>BEGIN TRANSACTION[事务名]</code></p>
+<p>回滚事务：<code>ROLLBACK TRANSACTION</code></p>
+<p>提交事务：<code>COMMIT TRANSACTION</code></p>
+<blockquote>
+<p>注意：COMMIT后不能回滚事务</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> PROC prcInsertStudent</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">BEGIN</span> TRY</span><br><span class="line">	<span class="keyword">BEGIN</span> TRANSACTION</span><br><span class="line">		<span class="keyword">INSERT</span> <span class="keyword">INTO</span> STUDENT <span class="keyword">VALUES</span>(<span class="string">&#x27;A0010&#x27;</span>,<span class="string">&#x27;ANDY&#x27;</span>...)</span><br><span class="line">		<span class="keyword">INSERT</span> <span class="keyword">INTO</span> STUDENT <span class="keyword">VALUES</span>(<span class="string">&#x27;A0010&#x27;</span>,<span class="string">&#x27;ANDY&#x27;</span>...)</span><br><span class="line">	<span class="keyword">COMMIT</span> TRANSACTION</span><br><span class="line"><span class="keyword">END</span> TRY</span><br><span class="line"><span class="keyword">BEGIN</span> CATCH</span><br><span class="line">	<span class="keyword">ROLLBACK</span> TRANSACTION</span><br><span class="line"><span class="keyword">END</span> CATCH</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> PROC 存储过程名</span><br><span class="line">	@参数名 参数类型[,…n]</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">BEGIN</span> TRY</span><br><span class="line">	IF <span class="keyword">EXISTS</span>()</span><br><span class="line">		<span class="keyword">BEGIN</span></span><br><span class="line">			<span class="keyword">BEGIN</span> TRANSACTION</span><br><span class="line">			<span class="operator">/</span><span class="operator">/</span>执行事务语句</span><br><span class="line">			<span class="keyword">COMMIT</span> TRANSACTION</span><br><span class="line">		<span class="keyword">END</span></span><br><span class="line">	<span class="keyword">ELSE</span></span><br><span class="line">		<span class="operator">/</span><span class="operator">/</span>信息不存在</span><br><span class="line"><span class="keyword">END</span> TRY</span><br><span class="line"><span class="keyword">BEGIN</span> CATCH</span><br><span class="line">	<span class="keyword">ROLLBACK</span> TRANSACTION</span><br><span class="line"><span class="keyword">END</span> CATCH</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> PROC prcTransfer</span><br><span class="line">	<span class="variable">@OriginUser</span> <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">	<span class="variable">@DesUser</span> <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">	<span class="variable">@Money</span> money</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">BEGIN</span> TRY</span><br><span class="line">	IF <span class="keyword">EXISTS</span>(<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> ACCOUNT <span class="keyword">WHERE</span> cardno<span class="operator">=</span><span class="variable">@OriginUser</span>)</span><br><span class="line">		IF <span class="keyword">EXISTS</span>(<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> ACCOUNT <span class="keyword">WHERE</span> cardno<span class="operator">=</span><span class="variable">@DesUser</span>)</span><br><span class="line">			IF(<span class="keyword">SELECT</span> money <span class="keyword">FROM</span> ACCOUNT <span class="keyword">WHERE</span> cardno<span class="operator">=</span><span class="variable">@OriginUser</span>)<span class="operator">&gt;=</span><span class="variable">@Money</span></span><br><span class="line">				<span class="keyword">BEGIN</span></span><br><span class="line">					<span class="keyword">BEGIN</span> TRANSACTION</span><br><span class="line">						<span class="keyword">UPDATE</span> Account <span class="keyword">set</span> money <span class="operator">=</span> money<span class="operator">-</span> <span class="variable">@Money</span> <span class="keyword">WHERE</span> cardno <span class="operator">=</span> <span class="variable">@OriginUser</span></span><br><span class="line">						<span class="keyword">UPDATE</span> Account <span class="keyword">set</span> money <span class="operator">=</span> money<span class="operator">+</span> <span class="variable">@Money</span> <span class="keyword">WHERE</span> cardno <span class="operator">=</span> <span class="variable">@DesUser</span></span><br><span class="line">					<span class="keyword">COMMIT</span> TRANSACTION</span><br><span class="line"><span class="keyword">END</span> TRY</span><br><span class="line"><span class="keyword">BEGIN</span> CATCH</span><br><span class="line">	<span class="keyword">ROLLBACK</span> TRANSACTION</span><br><span class="line"><span class="keyword">END</span> CATCH</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">BEGIN TRAN</span><br><span class="line">	INSERT INTO</span><br><span class="line">	INSERT INTO</span><br><span class="line">	DECLARE @studentcount int</span><br><span class="line">	SELECT @studentcount = COUNT(*)</span><br><span class="line">	IF @studentcount &gt;=10</span><br><span class="line">		BEGIN</span><br><span class="line">			ROLLBACK TRAN</span><br><span class="line">			PRINT</span><br><span class="line">		END</span><br><span class="line">	ELSE</span><br><span class="line">		BEGIN</span><br><span class="line">			COMMIT TRAN</span><br><span class="line">			PRINT</span><br><span class="line">		END</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="8-3-设置事务保存点"><a href="#8-3-设置事务保存点" class="headerlink" title="8.3 设置事务保存点"></a>8.3 设置事务保存点</h2><p>在事务内设置保存点 。保存点把事务分成几个逻辑单元, 如果事务的一部分是有条件地被取消,这样事务可以返回到保存点</p>
+<p><code>SAVE TRAN[SACTION]&#123;savepoint_name&#125;</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span> TRANSACTION</span><br><span class="line">    <span class="keyword">UPDATE</span> SC</span><br><span class="line">    <span class="keyword">SET</span> Score <span class="operator">=</span> Score <span class="operator">+</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">WHERE</span> StuID <span class="operator">=</span> ‘A00001’ <span class="keyword">and</span> CourseID <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">UPDATE</span> SC</span><br><span class="line">    <span class="keyword">SET</span> Score <span class="operator">=</span> Score <span class="operator">-</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">WHERE</span> StuID <span class="operator">=</span> ‘A00001’ <span class="keyword">and</span> CourseID <span class="operator">=</span> <span class="number">2</span></span><br><span class="line">SAVE TRANSACTION trnTransaction1</span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> STUDENT <span class="keyword">VALUES</span></span><br><span class="line">    (<span class="string">&#x27;A00014&#x27;</span>,<span class="string">&#x27;mary&#x27;</span>,<span class="number">21</span>,<span class="string">&#x27;男&#x27;</span>,<span class="string">&#x27;Nanjing&#x27;</span>,<span class="number">90</span>,<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">UPDATE</span> Department</span><br><span class="line">    <span class="keyword">SET</span> Total <span class="operator">=</span> Total <span class="operator">+</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">WHERE</span> DepID <span class="operator">=</span> <span class="number">2</span></span><br><span class="line">IF(<span class="keyword">SELECT</span> Total <span class="keyword">FROM</span> Department <span class="keyword">WHERE</span> DepID <span class="operator">=</span> <span class="number">2</span>)<span class="operator">&gt;</span><span class="number">100</span></span><br><span class="line">	<span class="keyword">BEGIN</span></span><br><span class="line">		<span class="keyword">ROLLBACK</span> TRANSACTION trnTransaction1</span><br><span class="line">		<span class="keyword">COMMIT</span> TRANSACTION</span><br><span class="line">	<span class="keyword">END</span></span><br><span class="line"><span class="keyword">ELSE</span> </span><br><span class="line">	<span class="keyword">COMMIT</span> TRANSACTION</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(8%E8%8A%82)/">http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(8%E8%8A%82)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/"># 数据库原理与应用</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(6%E8%8A%82)/">数据库原理与应用 第6节</a>
+            
+            
+            <a class="next" rel="next" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(%E7%AC%AC10%E8%8A%82)/">数据库原理与应用 第10节</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>数据库原理与应用 第1-4节 | JerryWei&#39;s Web</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Bentham&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Bentham&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">数据库原理与应用 第1-4节</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 22, 2022&nbsp;&nbsp;9:55:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/">课堂笔记</a>
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/2022%E6%98%A5%E5%AD%A3%E5%AD%A6%E6%9C%9F/">2022春季学期</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="数据库原理与应用-第1-4节"><a href="#数据库原理与应用-第1-4节" class="headerlink" title="数据库原理与应用 第1-4节"></a>数据库原理与应用 第1-4节</h1><h2 id="实验课一-创建、修改与删除数据库"><a href="#实验课一-创建、修改与删除数据库" class="headerlink" title="实验课一 创建、修改与删除数据库"></a>实验课一 创建、修改与删除数据库</h2><h3 id="一、创建数据库"><a href="#一、创建数据库" class="headerlink" title="一、创建数据库"></a>一、创建数据库</h3><p>数据库创建时，一定产生两个数据文件（主数据文件和次要数据文件）和一个主文件组、日志文件</p>
+<p>1、主文件组：primary，其中包括一个主数据文件（.mdf）和0~n个次要数据文件</p>
+<p>2、次文件组：可以包含0~n个次要数据文件（.ndf）</p>
+<p>3、日志文件：可以1~n个（.ldf）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> database 数据库名称</span><br><span class="line"><span class="keyword">on</span> <span class="keyword">primary</span></span><br><span class="line">(</span><br><span class="line">  主数据文件</span><br><span class="line">),</span><br><span class="line">(</span><br><span class="line">  次要数据文件</span><br><span class="line">),……n</span><br><span class="line"></span><br><span class="line">filegroup 次文件组名称</span><br><span class="line">(</span><br><span class="line">  次要数据文件</span><br><span class="line">),……n</span><br><span class="line"></span><br><span class="line">log <span class="keyword">on</span></span><br><span class="line">(</span><br><span class="line">  日志文件</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、修改数据库"><a href="#二、修改数据库" class="headerlink" title="二、修改数据库"></a>二、修改数据库</h3><h4 id="2-1-添加数据文件"><a href="#2-1-添加数据文件" class="headerlink" title="2.1 添加数据文件"></a>2.1 添加数据文件</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database 数据库名称</span><br><span class="line">  <span class="keyword">add</span> file</span><br><span class="line">  (</span><br><span class="line">    文件说明信息</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-添加文件组"><a href="#2-2-添加文件组" class="headerlink" title="2.2 添加文件组"></a>2.2 添加文件组</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database 数据库名称</span><br><span class="line">  <span class="keyword">add</span> filegroup 文件组名称</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3移除文件"><a href="#2-3移除文件" class="headerlink" title="2.3移除文件"></a>2.3移除文件</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database 数据库名称</span><br><span class="line">  remove file 数据文件的逻辑名称</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-4移除文件组"><a href="#2-4移除文件组" class="headerlink" title="2.4移除文件组"></a>2.4移除文件组</h4><p>一定要将该文件组的数据文件清空</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database 数据库名称</span><br><span class="line">  remove filegroup 文件组名称</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-5添加日志文件"><a href="#2-5添加日志文件" class="headerlink" title="2.5添加日志文件"></a>2.5添加日志文件</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database 数据库名称</span><br><span class="line">  <span class="keyword">add</span> log file</span><br><span class="line">  (</span><br><span class="line">    文件说明信息</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-6修改文件"><a href="#2-6修改文件" class="headerlink" title="2.6修改文件"></a>2.6修改文件</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database 数据库名称</span><br><span class="line">  modify file</span><br><span class="line">  (</span><br><span class="line">    文件说明信息</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-7重命名数据库"><a href="#2-7重命名数据库" class="headerlink" title="2.7重命名数据库"></a>2.7重命名数据库</h4><p>方法1：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database 数据库名称</span><br><span class="line">  modify name <span class="operator">=</span> 新数据库名称</span><br></pre></td></tr></table></figure>
+
+<p>方法2：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">exec</span> sp_renamedb <span class="string">&#x27;原数据库名称&#x27;</span>.<span class="string">&#x27;新数据库名称&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-8重命名文件组"><a href="#2-8重命名文件组" class="headerlink" title="2.8重命名文件组"></a>2.8重命名文件组</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database 数据库名称</span><br><span class="line">  modify filegroup 原文件组名称 name <span class="operator">=</span> 新文件组名称</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、删除数据库"><a href="#三、删除数据库" class="headerlink" title="三、删除数据库"></a>三、删除数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">use master</span><br><span class="line">go</span><br><span class="line"><span class="keyword">drop</span> database 数据库名称</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="实验课二-列表约束、数据与表的修改"><a href="#实验课二-列表约束、数据与表的修改" class="headerlink" title="实验课二  列表约束、数据与表的修改"></a>实验课二  列表约束、数据与表的修改</h2><h4 id="1、列约束"><a href="#1、列约束" class="headerlink" title="1、列约束"></a>1、列约束</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名</span><br><span class="line"></span><br><span class="line">(</span><br><span class="line"></span><br><span class="line">  列名<span class="number">1</span> 数据类型及宽度 列定义 <span class="keyword">constraint</span> PK_表名_列名 <span class="keyword">primary</span> key,   <span class="comment">--主键约束</span></span><br><span class="line"></span><br><span class="line">  列名<span class="number">2</span> 数据类型及宽度 列定义 <span class="keyword">constraint</span> IX_表名_列名 <span class="keyword">unique</span>,       <span class="comment">--唯一约束</span></span><br><span class="line"></span><br><span class="line">  列名<span class="number">3</span> 数据类型及宽度 列定义 <span class="keyword">constraint</span> CK_表名_列名 <span class="keyword">check</span>(约束条件:比较运算符 <span class="operator">|</span> <span class="keyword">like</span> <span class="operator">|</span> <span class="keyword">in</span> <span class="operator">|</span> <span class="keyword">or</span> <span class="operator">|</span> <span class="keyword">and</span> <span class="operator">|</span> <span class="keyword">between</span> <span class="keyword">and</span>), <span class="comment">--检查约束</span></span><br><span class="line"></span><br><span class="line">  列名<span class="number">4</span> 数据类型及宽度 列定义 <span class="keyword">constraint</span> DF_表名_列名 <span class="keyword">default</span> key,   <span class="comment">--默认约束</span></span><br><span class="line"></span><br><span class="line">  列名<span class="number">5</span> 数据类型及宽度 列定义 <span class="keyword">constraint</span> FK_表名_列名 <span class="keyword">foreign</span> key <span class="keyword">references</span> 主表(主键),   <span class="comment">--外键约束</span></span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、表约束"><a href="#2、表约束" class="headerlink" title="2、表约束"></a>2、表约束</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名</span><br><span class="line"></span><br><span class="line">(</span><br><span class="line"></span><br><span class="line">  列名<span class="number">1</span> 数据类型及宽度 列定义,</span><br><span class="line"></span><br><span class="line">  列名<span class="number">2</span> 数据类型及宽度 列定义,</span><br><span class="line"></span><br><span class="line">  列名<span class="number">3</span> 数据类型及宽度 列定义,</span><br><span class="line"></span><br><span class="line">  列名<span class="number">4</span> 数据类型及宽度 列定义,</span><br><span class="line"></span><br><span class="line">  列名<span class="number">5</span> 数据类型及宽度 列定义,</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> PK_表名_列名 <span class="keyword">primary</span> key(列名<span class="number">1</span>,列名<span class="number">2</span>,...),         <span class="comment">--主键约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> IX_表名_列名 <span class="keyword">unique</span>(列名<span class="number">1</span>,列名<span class="number">2</span>,...),           <span class="comment">--唯一约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> CK_表名_列名 <span class="keyword">check</span>(约束条件:比较运算符 <span class="operator">|</span> <span class="keyword">like</span> <span class="operator">|</span> <span class="keyword">in</span> <span class="operator">|</span> <span class="keyword">or</span> <span class="operator">|</span> <span class="keyword">and</span> <span class="operator">|</span> <span class="keyword">between</span> <span class="keyword">and</span>), <span class="comment">--检查约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> DF_表名_列名 <span class="keyword">default</span> 默认值 key 列名,           <span class="comment">--默认约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> FK_表名_列名 <span class="keyword">foreign</span> key(外键列名) <span class="keyword">references</span> 主表(主键)   <span class="comment">--外键约束</span></span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<p>例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--创建Department表</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> department</span><br><span class="line"></span><br><span class="line">(</span><br><span class="line"></span><br><span class="line">  DepID <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">constraint</span> PK_department_DepID <span class="keyword">primary</span> key,  <span class="comment">--在主表中定义主键字段</span></span><br><span class="line"></span><br><span class="line">  DepName <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span></span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">go</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">--创建Employee表(列约束)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> employee</span><br><span class="line"></span><br><span class="line">(</span><br><span class="line"></span><br><span class="line">  EmpID <span class="type">char</span>(<span class="number">5</span>) <span class="keyword">constraint</span> PK_employee_EmpID <span class="keyword">primary</span> key                    <span class="comment">--将Employee ID设置为主键约束</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">constraint</span> CK_employee_EmpID <span class="keyword">check</span>(EmpID <span class="keyword">like</span> <span class="string">&#x27;E[0-9][0-9][0-9][0-9]&#x27;</span>),    <span class="comment">--将EmployeeID设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  EmpName <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line"></span><br><span class="line">  EmpAge <span class="type">int</span> <span class="keyword">constraint</span> CK_employee_EmpAge <span class="keyword">check</span>(EmpAge <span class="keyword">between</span> <span class="number">20</span> <span class="keyword">and</span> <span class="number">60</span>),          <span class="comment">--将EmpAge设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  Emptitle <span class="type">char</span>(<span class="number">4</span>) <span class="keyword">constraint</span> CK_employee_Emptitle <span class="keyword">check</span>(Emptitle <span class="keyword">in</span>(<span class="string">&#x27;初级&#x27;</span>,<span class="string">&#x27;中级&#x27;</span>,<span class="string">&#x27;高级&#x27;</span>)),  <span class="comment">--将Emptitle设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  DepID <span class="type">int</span> <span class="keyword">constraint</span> FK_employee_DepID <span class="keyword">foreign</span> key <span class="keyword">references</span> department(DepID)        <span class="comment">--将DepID设置为外键约束</span></span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">--创建Employee表（表约束）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> employee</span><br><span class="line"></span><br><span class="line">(</span><br><span class="line"></span><br><span class="line">  EmpID <span class="type">char</span>(<span class="number">5</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line"></span><br><span class="line">  EmpName <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line"></span><br><span class="line">  EmpAge <span class="type">int</span>,</span><br><span class="line"></span><br><span class="line">  Emptitle <span class="type">char</span>(<span class="number">4</span>), </span><br><span class="line"></span><br><span class="line">  DepID <span class="type">int</span>, </span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> PK_employee_EmpID <span class="keyword">primary</span> key(EmpID),                <span class="comment">--将Employee ID设置为主键约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> CK_employee_EmpID <span class="keyword">check</span>(EmpID <span class="keyword">like</span> <span class="string">&#x27;E[0-9][0-9][0-9][0-9]&#x27;</span>),      <span class="comment">--将EmployeeID设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> CK_employee_EmpAge <span class="keyword">check</span>(EmpAge <span class="keyword">between</span> <span class="number">20</span> <span class="keyword">and</span> <span class="number">60</span>),          <span class="comment">--将EmpAge设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> CK_employee_Emptitle <span class="keyword">check</span>(Emptitle <span class="keyword">in</span>(<span class="string">&#x27;初级&#x27;</span>,<span class="string">&#x27;中级&#x27;</span>,<span class="string">&#x27;高级&#x27;</span>)),    <span class="comment">--将Emptitle设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> FK_employee_DepID <span class="keyword">foreign</span> key(DepID) <span class="keyword">references</span> department(DepID)  <span class="comment">--将DepID设置为外键约束</span></span><br><span class="line"></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、数据的插入"><a href="#3、数据的插入" class="headerlink" title="3、数据的插入"></a>3、数据的插入</h4><p>语法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表名(列名<span class="number">1</span>,列名<span class="number">2</span>,...)</span><br><span class="line"></span><br><span class="line"><span class="keyword">values</span>(值<span class="number">1</span>,值<span class="number">2</span>,..)</span><br></pre></td></tr></table></figure>
+
+<p>案例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--案例1：给department的表的全部字段添加记录</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> department</span><br><span class="line"><span class="keyword">values</span>(<span class="number">10</span>,<span class="string">&#x27;计算机科学与工程学院&#x27;</span>)</span><br><span class="line">go</span><br><span class="line"></span><br><span class="line"><span class="comment">--案例2：给department的表的部分字段添加记录</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> department(DepID)</span><br><span class="line"><span class="keyword">values</span>(<span class="number">11</span>)</span><br><span class="line">go</span><br><span class="line"></span><br><span class="line"><span class="comment">--查看添加记录后的数据表</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> 表名</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> department</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、数据的修改"><a href="#4、数据的修改" class="headerlink" title="4、数据的修改"></a>4、数据的修改</h4><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> 表名</span><br><span class="line"><span class="keyword">set</span> 列名<span class="number">1</span> <span class="operator">=</span> 新值<span class="number">1</span> , 列名<span class="number">2</span> <span class="operator">=</span> 新值<span class="number">2</span> , ...</span><br><span class="line"><span class="keyword">where</span> 条件表达式</span><br></pre></td></tr></table></figure>
+
+<p>案例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--案例：修改一个列的值</span></span><br><span class="line"><span class="keyword">update</span> student</span><br><span class="line"><span class="keyword">set</span> StuScore <span class="operator">=</span> StuScore<span class="operator">+</span><span class="number">5</span></span><br><span class="line"><span class="keyword">where</span> DepID <span class="operator">=</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--案例：修改多个列的值</span></span><br><span class="line"><span class="keyword">update</span> student</span><br><span class="line"><span class="keyword">set</span> StuScore <span class="operator">=</span> StuScore<span class="operator">+</span><span class="number">5</span> , DepID <span class="operator">=</span> <span class="number">2</span></span><br><span class="line"><span class="keyword">where</span> DepID <span class="operator">=</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5、数据的删除"><a href="#5、数据的删除" class="headerlink" title="5、数据的删除"></a>5、数据的删除</h4><p>语法：若无where条件表达式，则默认清空表记录 <code>delete from 表名 where 条件表达式</code></p>
+<p>案例：删除1系的学生信息 <code>delete from student where DepID = 1</code></p>
+<h4 id="6、表的修改"><a href="#6、表的修改" class="headerlink" title="6、表的修改"></a>6、表的修改</h4><h5 id="1、修改表结构：增加列"><a href="#1、修改表结构：增加列" class="headerlink" title="1、修改表结构：增加列"></a>1、修改表结构：增加列</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名</span><br><span class="line"><span class="keyword">add</span> 列名 数据类型及宽度 列定义</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<h5 id="2、修改表结构：删除列"><a href="#2、修改表结构：删除列" class="headerlink" title="2、修改表结构：删除列"></a>2、修改表结构：删除列</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">column</span> 列名</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<h5 id="3、修改表结构：修改列的定义"><a href="#3、修改表结构：修改列的定义" class="headerlink" title="3、修改表结构：修改列的定义"></a>3、修改表结构：修改列的定义</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">column</span> 列名 新的数据类型及宽度 列定义</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<h5 id="4、修改表结构：增加列约束"><a href="#4、修改表结构：增加列约束" class="headerlink" title="4、修改表结构：增加列约束"></a>4、修改表结构：增加列约束</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名</span><br><span class="line"><span class="keyword">add</span> <span class="keyword">constraint</span> 约束名称 约束类型 约束定义</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<h5 id="5、修改表结构：删除列约束"><a href="#5、修改表结构：删除列约束" class="headerlink" title="5、修改表结构：删除列约束"></a>5、修改表结构：删除列约束</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">constraint</span> 约束名称</span><br><span class="line">go</span><br><span class="line"><span class="comment">--创建Department表</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> department</span><br><span class="line"></span><br><span class="line">(</span><br><span class="line"></span><br><span class="line">  DepID <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">constraint</span> PK_department_DepID <span class="keyword">primary</span> key,  <span class="comment">--在主表中定义主键字段</span></span><br><span class="line"></span><br><span class="line">  DepName <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span></span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">go</span><br><span class="line"></span><br><span class="line"><span class="comment">--创建Employee表(列约束)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> employee</span><br><span class="line"></span><br><span class="line">(</span><br><span class="line"></span><br><span class="line">  EmpID <span class="type">char</span>(<span class="number">5</span>) <span class="keyword">constraint</span> PK_employee_EmpID <span class="keyword">primary</span> key                    <span class="comment">--将Employee ID设置为主键约束</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">constraint</span> CK_employee_EmpID <span class="keyword">check</span>(EmpID <span class="keyword">like</span> <span class="string">&#x27;E[0-9][0-9][0-9][0-9]&#x27;</span>),    <span class="comment">--将EmployeeID设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  EmpName <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line"></span><br><span class="line">  EmpAge <span class="type">int</span> <span class="keyword">constraint</span> CK_employee_EmpAge <span class="keyword">check</span>(EmpAge <span class="keyword">between</span> <span class="number">20</span> <span class="keyword">and</span> <span class="number">60</span>),          <span class="comment">--将EmpAge设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  Emptitle <span class="type">char</span>(<span class="number">4</span>) <span class="keyword">constraint</span> CK_employee_Emptitle <span class="keyword">check</span>(Emptitle <span class="keyword">in</span>(<span class="string">&#x27;初级&#x27;</span>,<span class="string">&#x27;中级&#x27;</span>,<span class="string">&#x27;高级&#x27;</span>)),  <span class="comment">--将Emptitle设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  DepID <span class="type">int</span> <span class="keyword">constraint</span> FK_employee_DepID <span class="keyword">foreign</span> key <span class="keyword">references</span> department(DepID)        <span class="comment">--将DepID设置为外键约束</span></span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">--创建Employee表（表约束）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> employee</span><br><span class="line"></span><br><span class="line">(</span><br><span class="line"></span><br><span class="line">  EmpID <span class="type">char</span>(<span class="number">5</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line"></span><br><span class="line">  EmpName <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line"></span><br><span class="line">  EmpAge <span class="type">int</span>,</span><br><span class="line"></span><br><span class="line">  Emptitle <span class="type">char</span>(<span class="number">4</span>), </span><br><span class="line"></span><br><span class="line">  DepID <span class="type">int</span>, </span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> PK_employee_EmpID <span class="keyword">primary</span> key(EmpID),                <span class="comment">--将Employee ID设置为主键约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> CK_employee_EmpID <span class="keyword">check</span>(EmpID <span class="keyword">like</span> <span class="string">&#x27;E[0-9][0-9][0-9][0-9]&#x27;</span>),      <span class="comment">--将EmployeeID设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> CK_employee_EmpAge <span class="keyword">check</span>(EmpAge <span class="keyword">between</span> <span class="number">20</span> <span class="keyword">and</span> <span class="number">60</span>),          <span class="comment">--将EmpAge设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> CK_employee_Emptitle <span class="keyword">check</span>(Emptitle <span class="keyword">in</span>(<span class="string">&#x27;初级&#x27;</span>,<span class="string">&#x27;中级&#x27;</span>,<span class="string">&#x27;高级&#x27;</span>)),    <span class="comment">--将Emptitle设置为检查约束</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">constraint</span> FK_employee_DepID <span class="keyword">foreign</span> key(DepID) <span class="keyword">references</span> department(DepID)  <span class="comment">--将DepID设置为外键约束</span></span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表名(列名<span class="number">1</span>,列名<span class="number">2</span>,...)</span><br><span class="line"></span><br><span class="line"><span class="keyword">values</span>(值<span class="number">1</span>,值<span class="number">2</span>,..)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="实验课三-内、外与交叉连接"><a href="#实验课三-内、外与交叉连接" class="headerlink" title="实验课三 内、外与交叉连接"></a>实验课三 内、外与交叉连接</h2><h3 id="1-内连接查询"><a href="#1-内连接查询" class="headerlink" title="1.内连接查询"></a>1.内连接查询</h3><h4 id="1-1显示内连接查询"><a href="#1-1显示内连接查询" class="headerlink" title="1.1显示内连接查询"></a>1.1显示内连接查询</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名<span class="number">1</span>,列名<span class="number">2</span>,...</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">INNER</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"></span><br><span class="line"><span class="keyword">ON</span> A表.连接字段 <span class="operator">=</span> B表.连接字段</span><br><span class="line"></span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> C表</span><br><span class="line"></span><br><span class="line"><span class="keyword">ON</span> B表.连接字段 <span class="operator">=</span> C表.连接字段</span><br><span class="line"></span><br><span class="line"><span class="keyword">WHERE</span> 查询条件或筛选条件</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2隐式内连接查询"><a href="#1-2隐式内连接查询" class="headerlink" title="1.2隐式内连接查询"></a>1.2隐式内连接查询</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名<span class="number">1</span>,列名<span class="number">2</span>,...</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> A表,B表,C表</span><br><span class="line"></span><br><span class="line"><span class="keyword">WHERE</span> A表.连接字段 <span class="operator">=</span> B表.连接字段 <span class="keyword">AND</span></span><br><span class="line"></span><br><span class="line">      B表.连接字段 <span class="operator">=</span> C表.连接字段 <span class="keyword">AND</span></span><br><span class="line"></span><br><span class="line">      查询条件或筛选条件</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-外连接查询"><a href="#2-外连接查询" class="headerlink" title="2.外连接查询"></a>2.外连接查询</h3><p>主表中的记录全部出现在结果集中，从表匹配主表指定字段的记录，若没有记录填充为NULL，列名1与列名2可以具有不同的名字,但数据类型及宽度、值域一定要相同</p>
+<h4 id="2-1左外连接查询"><a href="#2-1左外连接查询" class="headerlink" title="2.1左外连接查询"></a>2.1左外连接查询</h4><p>左表为主表，右表为从表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名<span class="number">1</span>,列名<span class="number">2</span>,...</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"></span><br><span class="line"><span class="keyword">ON</span> A表.连接字段 <span class="operator">=</span> B表.连接字段</span><br><span class="line"></span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> C表</span><br><span class="line"></span><br><span class="line"><span class="keyword">ON</span> B表.连接字段 <span class="operator">=</span> C表.连接字段</span><br><span class="line"></span><br><span class="line"><span class="keyword">WHERE</span> 查询条件或筛选条件</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2右外连接查询"><a href="#2-2右外连接查询" class="headerlink" title="2.2右外连接查询"></a>2.2右外连接查询</h4><p>右表为主表，左表为从表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名<span class="number">1</span>,列名<span class="number">2</span>,...</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"></span><br><span class="line"><span class="keyword">ON</span> A表.连接字段 <span class="operator">=</span> B表.连接字段</span><br><span class="line"></span><br><span class="line"><span class="keyword">RIGHT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> C表</span><br><span class="line"></span><br><span class="line"><span class="keyword">ON</span> B表.连接字段 <span class="operator">=</span> C表.连接字段</span><br><span class="line"></span><br><span class="line"><span class="keyword">WHERE</span> 查询条件或筛选条件</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3全外连接"><a href="#2-3全外连接" class="headerlink" title="2.3全外连接"></a>2.3全外连接</h4><p>左边连接的结果并上右表连接的结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名<span class="number">1</span>,列名<span class="number">2</span>,...</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"></span><br><span class="line"><span class="keyword">ON</span> A表.连接字段 <span class="operator">=</span> B表.连接字段</span><br><span class="line"></span><br><span class="line"><span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> C表</span><br><span class="line"></span><br><span class="line"><span class="keyword">ON</span> B表.连接字段 <span class="operator">=</span> C表.连接字段</span><br><span class="line"></span><br><span class="line"><span class="keyword">WHERE</span> 查询条件或筛选条件</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-交叉连接：笛卡尔积"><a href="#3-交叉连接：笛卡尔积" class="headerlink" title="3.交叉连接：笛卡尔积"></a>3.交叉连接：笛卡尔积</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名<span class="number">1</span>,列名<span class="number">2</span>,...</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">CROSS</span> <span class="keyword">JOIN</span> B表</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="实验课四-子查询"><a href="#实验课四-子查询" class="headerlink" title="实验课四  子查询"></a>实验课四  子查询</h2><p>子查询：<strong>子查询就是在一个SELECT语句中又嵌套了另一个SELECT语句。在&#x3D;&#x3D;WHERE&#x3D;&#x3D;子句 和&#x3D;&#x3D;HAVING&#x3D;&#x3D;子句中都可以嵌套SELECT语句。</strong></p>
+<blockquote>
+<p>示例： 查询和Mary在同一个系的所有学生和姓名,</p>
+<p>department(DepID,DepName) </p>
+<p>student(stuID,stuName,sex,DepNo)</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--解决方案</span></span><br><span class="line"><span class="keyword">Declare</span> <span class="variable">@DepID</span> <span class="type">int</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="variable">@DepID</span> <span class="operator">=</span> DepID <span class="keyword">FROM</span> Student <span class="keyword">WHERE</span> StuName <span class="operator">=</span> <span class="string">&#x27;mary&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> StuName <span class="keyword">From</span> STUDENT <span class="keyword">WHERE</span> DepID <span class="operator">=</span> <span class="variable">@DepID</span></span><br><span class="line"><span class="keyword">SELECT</span> stuName <span class="keyword">FROM</span> Student</span><br><span class="line"><span class="keyword">WHERE</span> DepID <span class="operator">=</span> (<span class="keyword">select</span> DepID <span class="keyword">FROM</span> STUDENT <span class="keyword">WHERE</span> stuName <span class="operator">=</span> <span class="string">&#x27;mary&#x27;</span>)</span><br><span class="line"><span class="comment">-- &quot;=&quot;号可以用in代替，当返回结果为集合只能用in</span></span><br></pre></td></tr></table></figure>
+
+<p>WHERE子句和HAVING子句的形式:</p>
+<ol>
+<li><strong><code>=</code></strong> or比较运算符 ( <strong><code>&gt;</code></strong>  <em><strong><code>&lt;</code></strong></em>  <em><strong><code>&gt;=</code></strong></em>  <em><strong><code>&lt;=</code></strong></em>  <em><strong><code>!=</code></strong></em>  <em><strong><code>&lt;&gt;</code></strong></em>)</li>
+<li><strong><code>IN</code><strong>关键字：</strong>先执行子查询</strong>，子查询的结果是一个临时表，而且仅为一个属性，<strong>再执行父查询</strong></li>
+<li>**<code>EXISTS</code>**关键字</li>
+<li>**<code>ANY</code><strong>、</strong><code>ALL</code>*<em>关键字*<em>（结合比较运算符）</em></em></li>
+</ol>
+<h3 id="1、“-x3D-”号"><a href="#1、“-x3D-”号" class="headerlink" title="1、“&#x3D;”号"></a>1、“&#x3D;”号</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名列表</span><br><span class="line"><span class="keyword">FROM</span> 表名<span class="number">1</span></span><br><span class="line"><span class="keyword">WHERE</span> 列名x <span class="operator">=</span> (<span class="keyword">SELECT</span> 列名x <span class="keyword">FROM</span> 表名<span class="number">2</span> [<span class="keyword">WHERE</span>子句] )</span><br></pre></td></tr></table></figure>
+
+<p>通常父查询中“&#x3D;”号左边出现的字段名和子查询的SELECT子句出现的字段名相同。</p>
+<blockquote>
+<p>示例：查询和Mary在同一个系中的所有学生姓名</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> StuName <span class="keyword">FROM</span> Student <span class="keyword">WHERE</span> DepID <span class="operator">=</span></span><br><span class="line">(<span class="keyword">SELECT</span> DepID <span class="keyword">FROM</span> Student WHEREStuName <span class="operator">=</span> <span class="string">&#x27;mary &#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>示例：查询计算机系的所有学生姓名</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> StuName <span class="keyword">FROM</span> Student <span class="keyword">WHERE</span> DepNo <span class="operator">=</span></span><br><span class="line">(<span class="keyword">select</span> DepID <span class="keyword">FROM</span> Department <span class="keyword">WHERE</span> DepName <span class="operator">=</span> <span class="string">&#x27;计算机&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、比较运算符"><a href="#2、比较运算符" class="headerlink" title="2、比较运算符"></a>2、比较运算符</h3><p>与&#x3D;&#x3D;数值型、日期&#x3D;&#x3D;进行比较</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> StuID</span><br><span class="line"><span class="keyword">FROM</span> student</span><br><span class="line"><span class="keyword">WHERE</span> stuScore <span class="operator">&gt;</span></span><br><span class="line">(</span><br><span class="line"> <span class="keyword">SELECT</span> <span class="built_in">AVG</span> (stuScore) <span class="keyword">FROM</span> student</span><br><span class="line"> WHEREDepID <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、使用IN关键词"><a href="#3、使用IN关键词" class="headerlink" title="3、使用IN关键词"></a>3、使用IN关键词</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名列表</span><br><span class="line"><span class="keyword">FROM</span> 表名<span class="number">1</span></span><br><span class="line"><span class="keyword">WHERE</span> 列名x [<span class="keyword">NOT</span>] <span class="keyword">IN</span> (<span class="keyword">SELECT</span> 列名x <span class="keyword">FROM</span> 表名<span class="number">2</span> [<span class="keyword">WHERE</span>子句] )</span><br></pre></td></tr></table></figure>
+
+<p>通常使用“&#x3D;”号的子查询可以替换成IN关键字，但是使用IN关键字的子查询不可替换成“&#x3D;”号。</p>
+<blockquote>
+<p>示例1：有关系模式如下，要查找选修了1号课程的所有学生姓名</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Student (stuID ,StuName , stuAge , DepID)</span><br><span class="line">Course(CourseID ,CourseName)</span><br><span class="line">SC(stuID ,courseID ,score)</span><br><span class="line"><span class="keyword">SELECT</span> StuName <span class="keyword">FROM</span> Student </span><br><span class="line"><span class="keyword">WHERE</span> stuID <span class="keyword">IN</span>(<span class="keyword">SELECT</span> stuID <span class="keyword">FROM</span> sc <span class="keyword">WHERE</span> CourseID <span class="operator">=</span> <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>示例2：将选择数据库课程的学生姓名找出来</p>
+</blockquote>
+<p>①根据coursename&#x3D;’数据库’ 查找Course对应的CourseID</p>
+<p>②根据CourseID查找SC对应的stuID</p>
+<p>③根据stuID查找student对应的stuname</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> stuName</span><br><span class="line"><span class="keyword">From</span> Student</span><br><span class="line"><span class="keyword">WHERE</span> StuID <span class="keyword">IN</span>(</span><br><span class="line"><span class="keyword">SELECT</span> StuID <span class="keyword">FROM</span> SC <span class="keyword">WHERE</span> CourseID <span class="keyword">IN</span> (</span><br><span class="line"><span class="keyword">SELECT</span> CourseID <span class="keyword">FROM</span> Course <span class="keyword">WHERE</span> CourseName<span class="operator">=</span><span class="string">&#x27;数据库&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、ANY-x2F-ALL关键字连接子查询"><a href="#4、ANY-x2F-ALL关键字连接子查询" class="headerlink" title="4、ANY&#x2F;ALL关键字连接子查询"></a>4、ANY&#x2F;ALL关键字连接子查询</h3><ol>
+<li>“&gt;ALL”:父查询中的结果集大于子查询中每一个值(大于子查询结果集中的最大值),则为真;</li>
+<li>“&lt;ALL”:父查询中的结果集小于子查询中每一个值(小于子查询结果集中的最小值),则为真;</li>
+<li>“&lt;&gt;ALL”:作用于NOT IN相同，不等于列表中的值;</li>
+<li>“&gt;ANY”:父查询中的结果集大于子查询中任意一个值(大于子查询结果集中的最小值),则为真;</li>
+<li>“&#x3D;ANY”:与子查询IN相同，父查询条件表达式存在于子查询的结果集中里;</li>
+<li>“&lt;ANY”:父查询中的结果集小于子查询中任意一个值(小于子查询结果集中的最大值),则为真;</li>
+<li>“&lt;&gt;ANY”返回全集。</li>
+</ol>
+<h3 id="5、使用EXISTS关键字连接子查询"><a href="#5、使用EXISTS关键字连接子查询" class="headerlink" title="5、使用EXISTS关键字连接子查询"></a>5、使用EXISTS关键字连接子查询</h3><p><code>父表.相等字段=子表.相等字段</code>时才会出现</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 列名列表 <span class="keyword">FROM</span> 表名<span class="number">1</span></span><br><span class="line"><span class="keyword">WHERE</span> [<span class="keyword">NOT</span>] <span class="keyword">EXISTs</span> (<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名<span class="number">2</span> [<span class="keyword">WHERE</span>子句] )</span><br></pre></td></tr></table></figure>
+
+<p>1、EXISTS后面不能跟列名 2、SELECT后面也不能跟列名，只能跟* 3、当出现“全部”、“所有”这些关键字时，应考虑使用NOT EXISTS相当于除法运算</p>
+<p>1、父查询传送列值给子查询</p>
+<p>2、子查询获取父查询传送的列值</p>
+<p>3、子查询返回查询值给父查询</p>
+<p>4、父查询传送下一列的列值给子查询（返回第一步）</p>
+<p>示例1：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> StuID,StuName </span><br><span class="line"><span class="keyword">FROM</span> student</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">EXISTs</span></span><br><span class="line">(<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> SC <span class="keyword">WHERE</span> stuID <span class="operator">=</span> student.StuID <span class="keyword">AND</span> CourseID <span class="operator">=</span><span class="string">&#x27;1&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>示例2：查询所有成绩都在85分以上的学生的学号和姓名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> StuID,StuName</span><br><span class="line"><span class="keyword">FROM</span> Student</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">EXISTS</span></span><br><span class="line">(<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> SC <span class="keyword">WHERE</span> StuID <span class="operator">=</span> Student.StuID <span class="keyword">AND</span> Score <span class="operator">&gt;</span> <span class="number">85</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="6、在HAVING子句中使用子查询"><a href="#6、在HAVING子句中使用子查询" class="headerlink" title="6、在HAVING子句中使用子查询"></a>6、在HAVING子句中使用子查询</h3><p>示例:有关系模式student(stuID ,StuName , StuAge , stuscore , DepID)，要显示院系平均入学成绩大于所有学生平均成绩的记录。</p>
+<p>解决方案:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> DepID,<span class="built_in">AVG</span> (stuScore)</span><br><span class="line"><span class="keyword">FROM</span> Student</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> DepID</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">AVG</span> (stuscore)<span class="operator">&gt;</span></span><br><span class="line">(</span><br><span class="line">  <span class="keyword">SELECT</span> <span class="built_in">AVG</span> (stuScore)</span><br><span class="line">  <span class="keyword">FROM</span> student</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-8、UNION与SELECT-INTO"><a href="#7-8、UNION与SELECT-INTO" class="headerlink" title="7-8、UNION与SELECT INTO"></a>7-8、UNION与SELECT INTO</h3><p>1、合并查询（UNION）</p>
+<p>2、SELECT INTO子句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> stuID,stuName <span class="keyword">INTO</span> boy</span><br><span class="line"><span class="keyword">FROM</span> Student</span><br><span class="line"><span class="keyword">WHERE</span> sex<span class="operator">=</span><span class="string">&#x27;男&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="9、综合例题"><a href="#9、综合例题" class="headerlink" title="9、综合例题"></a>9、综合例题</h3><blockquote>
+<p>示例2:查询选修“数据库原理”课程成绩最高的学生姓名</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> StuName</span><br><span class="line"><span class="keyword">FROM</span> Student</span><br><span class="line"><span class="keyword">WHERE</span> StuName <span class="operator">=</span>(</span><br><span class="line"><span class="keyword">SELECT</span> StuName <span class="keyword">FROM</span> Student <span class="keyword">WHERE</span> StuID <span class="keyword">IN</span></span><br><span class="line">(<span class="keyword">SELECT</span> StuID <span class="keyword">FROM</span> SC <span class="keyword">WHERE</span> Grade <span class="operator">=</span></span><br><span class="line">(<span class="keyword">SELECT</span> <span class="built_in">MAX</span>(Grade) <span class="keyword">FROM</span> SC <span class="keyword">WHERE</span> CourseID <span class="keyword">IN</span></span><br><span class="line">(<span class="keyword">SELECT</span> CourseID <span class="keyword">FROM</span> Course <span class="keyword">WHERE</span> CourseName <span class="operator">=</span> <span class="string">&#x27;数据库原理&#x27;</span>)) <span class="keyword">AND</span></span><br><span class="line">CourseID <span class="operator">=</span> (<span class="keyword">SELECT</span> CourseID <span class="keyword">FROM</span> Course <span class="keyword">WHERE</span> CourseName <span class="operator">=</span> <span class="string">&#x27;数据库原理&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>示例3：将计算机系所有学生成绩置为0</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> SC</span><br><span class="line"><span class="keyword">SET</span> Grade <span class="operator">=</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">WHERE</span> StuID <span class="keyword">IN</span>(<span class="keyword">SELECT</span> StuID <span class="keyword">From</span> Student <span class="keyword">WHERE</span> DepName<span class="operator">=</span><span class="string">&#x27;计算机&#x27;</span>)</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(1-4%E8%8A%82)/">http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(1-4%E8%8A%82)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/"># 数据库原理与应用</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/06/22/tag/">tag</a>
+            
+            
+            <a class="next" rel="next" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(7%E8%8A%82)/">数据库原理与应用 第7节</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

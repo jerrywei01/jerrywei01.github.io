@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>数据库原理与应用（复习） | JerryWei&#39;s Web</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Bentham&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Bentham&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">数据库原理与应用（复习）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 22, 2022&nbsp;&nbsp;9:55:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/">课堂笔记</a>
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/2022%E6%98%A5%E5%AD%A3%E5%AD%A6%E6%9C%9F/">2022春季学期</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="数据库原理与应用（复习）"><a href="#数据库原理与应用（复习）" class="headerlink" title="数据库原理与应用（复习）"></a>数据库原理与应用（复习）</h1><h2 id="一、E-R图及分解表结构"><a href="#一、E-R图及分解表结构" class="headerlink" title="一、E-R图及分解表结构"></a>一、E-R图及分解表结构</h2><h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><ol>
+<li><p><strong>概念结构设计</strong>：根据系统需求分析绘制全局E-R图（实体-联系图）</p>
+</li>
+<li><p><strong>逻辑结构设计</strong>：根据全局E-R图转换为关系模式</p>
+<p>实体与实体的联系</p>
+<ul>
+<li><strong>1：1联系</strong><ol>
+<li>将每个实体转换为一个关系模式</li>
+<li>找出每个关系中的主键</li>
+<li>建立联系：将A实体中的主键添加到B实体中或者反之</li>
+</ol>
+</li>
+<li><strong>1：n联系</strong><ol>
+<li>将每个实体转换为一个关系模式</li>
+<li>找出每个关系中的主键</li>
+<li>建立联系：将1关系中的主键添加到多关系中</li>
+</ol>
+</li>
+<li><strong>m：n联系</strong><ol>
+<li>将每个实体转换为一个关系模式</li>
+<li>找出每个关系中的主键</li>
+<li>建立联系：一定会产生新的关系，新关系中的属性有两个实体的主键及新的属性组成</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p><strong>物理结构设计</strong>：根据选择的DBMS（数据库管理系统）设计物理表结构：字段名称、字段类型及长度、是否为空、约束（主键、外键、默认、检查等）、备注</p>
+</li>
+</ol>
+<h3 id="例"><a href="#例" class="headerlink" title="例"></a>例</h3><p>判断下面实体间的关系，并设计表。<br>1.有员工、部门实体。一个部门有多名员工，一个员工只在一个部门工作。Employee(EmplD,EmpName,EmpSex,Phone)<br>Department(DepID,DepName)</p>
+<p>Employee(EmplD,EmpName,EmpSex,Phone,DepID)<br>Department(DepID,DepName)</p>
+<p>建立联系：Employee.DepID&#x3D;Department.DepID</p>
+<blockquote>
+<p>建立关系就是有着共有属性</p>
+</blockquote>
+<p><img src="C:\Users\JerryWei\Nutstore\1\我的坚果云\Typora笔记\images\image-20220607143109971.png" alt="image-20220607143109971"></p>
+<p>⒉快递员和客户。一个快递员可以服务于多个客户，为多名客户投送包裹，一名客户的不同包裹也可以由不同的快递员服务。<br>快递员（快递员手机，姓名)<br>客户（客户手机，姓名)<br>请根据题意画出E-R图及分解成表。</p>
+<blockquote>
+<p>注:每种关系对应的分解规则</p>
+</blockquote>
+<p><img src="C:\Users\JerryWei\Nutstore\1\我的坚果云\Typora笔记\images\image-20220607143215536.png" alt="image-20220607143215536"></p>
+<blockquote>
+<p>考试时是一个系统，绘制了一大部分，要求你去补充完整。</p>
+</blockquote>
+<h2 id="二、范式"><a href="#二、范式" class="headerlink" title="二、范式"></a>二、范式</h2><h3 id="1-1NF、2NF、3NF的定义"><a href="#1-1NF、2NF、3NF的定义" class="headerlink" title="1. 1NF、2NF、3NF的定义"></a>1. 1NF、2NF、3NF的定义</h3><ol>
+<li><p>第一范式：每一个属性都是原子数据不可分割；</p>
+</li>
+<li><p>第二范式：满足第一范式的基础上，判断每一个非主属性是否完全依赖于主属性；</p>
+<blockquote>
+<p>SC(Sno,Cno,Credit,Grade)，Credit（学分）只跟Cno（课程号）有关系，只是部分依赖，并不是完全依赖</p>
+<p>经过分解即可满足第二范式：</p>
+<p>SC1(Sno,Cno,Grade)	Course(Cno,Credit)</p>
+</blockquote>
+</li>
+<li><p>第三范式：满足第二范式的基础上，每一个非主属性不传递依赖于其他的非主属性</p>
+<blockquote>
+<p>SLC(<u>StuID,CourseID</u>,DepName,Sloc,Grade)</p>
+<p>StuId,CourseID-&gt;Grade</p>
+<p>而可以根据DepName系名得到Sloc住处，存在传递依赖</p>
+<p>经过分解可以满足第三范式：</p>
+<p>SC(StuID,CourseID,Grade)	S(StuID,DepName)	DS(DepName,Sloc)</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="2-函数依赖规则的判断"><a href="#2-函数依赖规则的判断" class="headerlink" title="2.函数依赖规则的判断"></a>2.函数依赖规则的判断</h3><p>如(1)A-&gt;B,A-&gt;C则A-&gt;B,C</p>
+<p>(2)AB-&gt;C则A-&gt;C;B-&gt;C</p>
+<p>上面两个式子是否成立? </p>
+<p>SC(StuID,CourseID,Grade) (则2不成立)</p>
+<h3 id="3-例题"><a href="#3-例题" class="headerlink" title="3.例题"></a>3.例题</h3><p>某小区每年进行一次抽签来决定车位分配。小区物业拟建立一个信息系统，对停车位的使用和收费进行管理。<br>(1）小区内<strong>每套房屋可能有多名业主</strong>，<strong>一名业主也可能在小区内有多套房屋</strong>。业主信息包括业主姓名、身份证号、房号、房屋面积，其中房号不重复。（多对多）<br>(2）所有车位都有固定的编号，且同一年度所有车位的出租费用相同，但不同年份的出租费用可能不同。<br>(3）所有车位都参与每年的抽签分配。每套房屋每年只能有一次抽签机会。抽中车位的业主需一次性缴纳全年的车位使用费用，且必须指定唯一的汽车使用该车位。<br>(4）小区车辆出入口设有车牌识别系统，可以实时识别进出的汽车车牌号。为方便门卫确认，系统还需登记汽车的品牌和颜色。</p>
+<p><strong>【逻辑结构设计】</strong><br>根据上述需求，设计出如下关系模式：<br>业主（业主姓名，业主身份证号，房号，房屋面积）<br>车位（车位编号，房号，车牌号，汽车品牌，汽车颜色，使用年份，费用）</p>
+<p>【问】</p>
+<ol>
+<li><p>车位表的主键是什么?</p>
+<blockquote>
+<p>首先必须是候选键 -&gt; 先找候选键 -&gt;</p>
+<p>（车位编号，使用年份）	（房号，使用年份）	（车牌号，使用年份）</p>
+<p>写哪一个都可以</p>
+</blockquote>
+</li>
+<li><p>车位表满足第几范式?</p>
+<p>车位（<u><strong>车位编号，使用年份</strong></u>，房号，车牌号，汽车品牌，汽车颜色，费用）</p>
+<blockquote>
+<p>满足第二范式：每一个非主属性完全依赖主属性</p>
+<p>但不满足第三范式：车牌号 -&gt; 汽车品牌 或 汽车颜色</p>
+<p>进行分解</p>
+<p>W1（车位编号,使用年份,房号,车牌号）</p>
+<p>W2（车牌号,汽车品牌,汽车颜色）</p>
+<p>W3（使用年份,费用）</p>
+</blockquote>
+</li>
+<li><p>若不满足3NF，分解为满足3NF的关系模式。</p>
+</li>
+</ol>
+<h2 id="三、关系运算"><a href="#三、关系运算" class="headerlink" title="三、关系运算"></a>三、关系运算</h2><h4 id="关系运算1"><a href="#关系运算1" class="headerlink" title="关系运算1"></a>关系运算1</h4><p>并交差、选择、投影、连接、笛卡尔积、除法</p>
+<p>关系运算与关系表达式(要求会写并能读懂关系代数表达式。对给定的关系表进行交、并、差、笛卡尔积等关系运算)</p>
+<p>并交叉：是二元关系运算，必须具有完全相同的关系模式</p>
+<p>R×S（笛卡尔乘积）：属性相加，元组相乘</p>
+<h4 id="专门的关系运算：投影、选择、连接（等值连接、自然连接）"><a href="#专门的关系运算：投影、选择、连接（等值连接、自然连接）" class="headerlink" title="专门的关系运算：投影、选择、连接（等值连接、自然连接）"></a>专门的关系运算：投影、选择、连接（等值连接、自然连接）</h4><blockquote>
+<p>考试只考自然连接</p>
+</blockquote>
+<h4 id="关系运算2"><a href="#关系运算2" class="headerlink" title="关系运算2"></a>关系运算2</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Employee(EmplD,EmpName,EmpSex,Phone,DepID)</span><br><span class="line">Department(DeplD,DepName)</span><br></pre></td></tr></table></figure>
+
+<p>写出关系代数表达式:<br>1.查询DepID为1的员工号、姓名。</p>
+<blockquote>
+<p>先选择后投影</p>
+</blockquote>
+<p><img src="/../images/image-20220607150357185.png" alt="image-20220607150357185"></p>
+<p>⒉查询DepName为Technical的女员工姓名和联系方式</p>
+<blockquote>
+<p>两个选择 -&gt; DepName&#x3D;’Technical’ EmpSex&#x3D;’女’，再做投影</p>
+</blockquote>
+<p><img src="/../images/image-20220607150656642.png" alt="image-20220607150656642"></p>
+<h3 id="关系运算3"><a href="#关系运算3" class="headerlink" title="关系运算3"></a>关系运算3</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Employee(EmpID,EmpName,EmpSex,Phone,DeplD) </span><br><span class="line">Department(DepID,DepName)</span><br><span class="line">Project(ProjlD,ProjName,StartDay,EndDay)</span><br><span class="line">EP(EmpID,ProjlD,Days)</span><br></pre></td></tr></table></figure>
+
+<p>写出关系代数表达式:</p>
+<ol>
+<li><p>查询DepID为1的员工号、姓名。</p>
+</li>
+<li><p>查询参与了所有项目的员工编号。</p>
+<p>R(x,y)÷S(y)</p>
+<p><img src="/../images/image-20220607150941714.png" alt="image-20220607150941714"></p>
+</li>
+<li><p>查询参与了1号项目的员工姓名。</p>
+</li>
+<li><p>查询同时参与了1号和2号项目的员工工号。</p>
+</li>
+</ol>
+<h2 id="四、创建表——带有列约束"><a href="#四、创建表——带有列约束" class="headerlink" title="四、创建表——带有列约束"></a>四、创建表——带有列约束</h2><blockquote>
+<p>_(:з」∠)<em>每年保留节目_(:з」∠)</em></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Create table 表名</span><br><span class="line">(</span><br><span class="line">    列名 数据类型 constraint PK_表名缩写_列名缩写 primary key,</span><br><span class="line">    列名 数据类型 constraint FK_表名缩写_列名缩写 foreign key references 主表(主键),</span><br><span class="line">    列名 数据类型 not null,</span><br><span class="line">    列名 数据类型 constraint UQ_表名缩写_列名缩写 unique,</span><br><span class="line">    列名 数据类型 constraint DF_表名缩写_列名缩写 default 默认值,</span><br><span class="line">    列名 数据类型 constraint CK_表名缩写_列名缩写 check(约束条件),</span><br><span class="line">    列名 数据类型 identity(1,1)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>记得再看看列约束</p>
+</blockquote>
+<h2 id="五、表记录的维护"><a href="#五、表记录的维护" class="headerlink" title="五、表记录的维护"></a>五、表记录的维护</h2><ol>
+<li><p>插入数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Insert into 表名[(列名,列名.…)] </span><br><span class="line">Values(值,值.…)`</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更改数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Update 表名(</span><br><span class="line">Set 列名=新值,列名=新值</span><br><span class="line">[Where 条件表达式]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Delete from 表名</span><br><span class="line">[Where 条件表达式]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果删除学生，要考虑要连带的成绩、SC选修课程表的记录一同删除</p>
+</blockquote>
+<p>更新</p>
+</li>
+</ol>
+<h2 id="六、SQL语句"><a href="#六、SQL语句" class="headerlink" title="六、SQL语句"></a>六、SQL语句</h2><ol>
+<li><p>SELECT 列名或列名表达式</p>
+<p>投影操作，对列的筛选，行可能减少</p>
+<p><code>SELECT [ALL|DISTINCT][TOP n[percent]]*|列名或列名表达式[into 新表名]</code></p>
+<blockquote>
+<p>TOP n一般和orderby一起使用</p>
+</blockquote>
+</li>
+<li><p>FROM 表名或视图名</p>
+<p>连接操作，至少两个关系</p>
+<ol>
+<li><p>内连接</p>
+<ol>
+<li><p>显式内连接</p>
+<p><code>SELECT 列名或列名表达式 FROM A表 INNER JOIN B表 ON 连接条件 WHERE 筛选条件</code></p>
+</li>
+<li><p>隐式内连接</p>
+<p><code>SELECT 列名或列名表达式 FROM A表,B表 WHERE 连接条件</code></p>
+</li>
+</ol>
+</li>
+<li><p>外连接</p>
+<ol>
+<li><p>左外连接</p>
+<p><code>From A表left outer join B表On A表.列名-=B表.列名Where查询条件2.2右外连接</code></p>
+</li>
+<li><p>右外连接</p>
+</li>
+<li><p>全外连接</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>WHERE 条件表达式</p>
+<p>选择操作，对行的筛选，列不变</p>
+<ol>
+<li><p>逻辑运算符：AND&#x2F;OR&#x2F;NOT</p>
+</li>
+<li><p>比较运算符：&gt;&lt; &gt;&#x3D; !&#x3D; &lt;&gt; &lt;&#x3D;</p>
+<blockquote>
+<p>grade&gt;&#x3D;0 and grade&lt;&#x3D;100</p>
+</blockquote>
+</li>
+<li><p>范围运算符：BETWEEN A AND B</p>
+<blockquote>
+<p>grade between 0 and 100</p>
+</blockquote>
+</li>
+<li><p>列表运算符：IN</p>
+</li>
+<li><p>LIKE模糊查询：</p>
+<ul>
+<li><p>_表示单个字符</p>
+</li>
+<li><p>%表示多个字符</p>
+</li>
+<li><p>[]匹配方括号中的任意一个</p>
+</li>
+<li><p>[^]不在方括号以内的值</p>
+<blockquote>
+<p>WHERE stuName like ‘王%’</p>
+<p>WHERE stuName like ‘_晓%’</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>GROUP BY 分组字段</p>
+<p>分组统计，与聚合函数一起使用</p>
+</li>
+<li><p>HAVING 分组之后的筛选条件</p>
+<p>对分组之后的记录进行筛选，可以包含聚合函数</p>
+</li>
+<li><p>ORDER BY 列名 ASC|DESC</p>
+<p>对查询记录进行排序，ASC表示升序（默认），DESC表示降序</p>
+</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8%EF%BC%88%E5%A4%8D%E4%B9%A0%EF%BC%89/">http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8%EF%BC%88%E5%A4%8D%E4%B9%A0%EF%BC%89/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/"># 数据库原理与应用</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(9%E8%8A%82)/">数据库原理与应用 第9节</a>
+            
+            
+            <a class="next" rel="next" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(5%E8%8A%82)/">数据库原理与应用 第5节</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

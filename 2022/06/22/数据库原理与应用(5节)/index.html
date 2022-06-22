@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>数据库原理与应用 第5节 | JerryWei&#39;s Web</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Bentham&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Bentham&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">数据库原理与应用 第5节</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 22, 2022&nbsp;&nbsp;9:55:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/">课堂笔记</a>
+                            
+                                <a href="/categories/%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/2022%E6%98%A5%E5%AD%A3%E5%AD%A6%E6%9C%9F/">2022春季学期</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="数据库原理与应用-第5节"><a href="#数据库原理与应用-第5节" class="headerlink" title="数据库原理与应用 第5节"></a>数据库原理与应用 第5节</h1><h2 id="实验课五-语句优化-索引与视图-表达式与流程控制"><a href="#实验课五-语句优化-索引与视图-表达式与流程控制" class="headerlink" title="实验课五 语句优化|索引与视图|表达式与流程控制"></a>实验课五 语句优化|索引与视图|表达式与流程控制</h2><h3 id="一、SQL-Server-语句优化"><a href="#一、SQL-Server-语句优化" class="headerlink" title="一、SQL Server 语句优化"></a>一、SQL Server 语句优化</h3><h4 id="1-1-语句优化的优势"><a href="#1-1-语句优化的优势" class="headerlink" title="1.1 语句优化的优势"></a>1.1 语句优化的优势</h4><ol>
+<li>良好的系统和数据库设计;</li>
+<li>优质的SQL编写;</li>
+<li>合适的数据表索引设计;</li>
+<li>甚至各种硬件因素：网络性能、服务器的性能、操作系统的性能，甚至网卡、交换机等。</li>
+</ol>
+<h4 id="1-2-语句优化"><a href="#1-2-语句优化" class="headerlink" title="1.2 语句优化"></a>1.2 语句优化</h4><ol>
+<li><p>按需索取字段，少用 “ SELECT * “</p>
+<ol>
+<li>任何地方都不要使用&#x3D;&#x3D;select * from t&#x3D;&#x3D; ,用具体的字段列表代替“*”，不要返回用不到的任何字段。</li>
+<li><code>select count(*) from table</code>;这样不带任何条件的count会引起全表扫描，并且没有任何业务意义，是一定要杜绝的。&#x3D;&#x3D;用count(1)代替count(*)&#x3D;&#x3D;</li>
+</ol>
+</li>
+<li><p>字段名和表名要写规范，注意大小写</p>
+<ul>
+<li>对于两句大小写不同的语句，有人认为是相同的,数据库查询优化器认为是不同的。</li>
+</ul>
+</li>
+<li><p>不要把SQL语句写得太复杂</p>
+</li>
+<li><p>对查询进行优化,要<strong>尽量避免全表扫描</strong>，首先应考虑在<strong>where</strong> 及**order by **涉及的列上建立索引。通过创建索引加快查询速度。</p>
+</li>
+<li><p>应尽量<strong>避免在where子句中使用null 值、!&#x3D; 或 &lt;&gt; 操作符进行判断</strong>，否则将放弃使用索引而进行全表扫描。</p>
+<ul>
+<li>如:<code>select id from t where num is null</code><br>最好不要给数据库留NULL，尽可能的使用NOT NULL填充数据库。（除备注、描述、评论之类外)</li>
+</ul>
+</li>
+<li><p>尽量<strong>避免在where子句中使用or来连接条件</strong>，如果一个字段有索引，一个字段没有索引，将导致放弃使用索引而进行全表扫描。</p>
+<ul>
+<li>查询参数可以包含以下操作:&#x3D;、＜、&gt;、&gt;&#x3D;、&lt;&#x3D;、BETWEEN、部分like。其中，like当这样使用时会用到索引: <code>like &#39;*%&#39;</code>，但<code>like&#39;%*&#39;</code>就用不到索引。</li>
+<li>不适当的查询参数有:NOT、!&#x3D;、&lt;&gt;、 !&gt;、!&lt;、NOT EXISTS、NOT IN 、NOT LIKE等，还有一些不当的用法，例如:对数据进行计算，负向查询、等号左边使用函数、使用OR。上述语法都用不上索引，降低程序的效率。</li>
+</ul>
+</li>
+<li><p><strong>不要在 where子句中的“&#x3D;”左边进行函数、算术运算或其他表达式运算</strong>,否则系统将可能无法正确使用索引。</p>
+<ol>
+<li>采用函数处理的字段不能利用索引，<ul>
+<li>如：<code>select id from t where substring(name,1,3)=&#39;abc&#39;</code>应改为:<br><code>select id from t where name like &#39;abc%&#39;</code></li>
+</ul>
+</li>
+<li>进行了显式或隐式的运算的字段不能进行索引，<ul>
+<li><code>num+20&gt;50</code>应优化处理为:<code>num&gt;30</code></li>
+</ul>
+</li>
+<li>这样做的后果是将在每个行上进行运算，这将导致该列的索引失效而触发全表扫描。<br>如下SQL:<br><code>select * from users where YEAR(dteCrgated)&lt;2007</code>可以改成<br><code>select * from users where dteCreated&lt;&#39; 2007-01-01&#39;</code>这样会使用针对dateCreated的索引，提高查询效率。</li>
+</ol>
+</li>
+<li><p>WHERE后面的条件顺序影响</p>
+<p>WHERE语句后面的条件顺序对大数据量表的查询会产生直接影响。</p>
+<ol>
+<li><p><code>SELECT *FROM t WHERE name =&#39;大数据&#39;AND num=1</code></p>
+</li>
+<li><p><code>SELECT *FROM t WHERE num=1 AND name=&#39;大数据’</code></p>
+</li>
+</ol>
+<blockquote>
+<p>以上两个SQL中两个字段都没进行索引，所以执行的时候都是全表扫描，第一条SQL的name &#x3D;’大数据’条件在记录集内比率为99%，而num&#x3D;1的比率只为0.5%，在进行第1条SQL的时候99%条记录都进行比较，而在进行第2条SQL的时候0.5%条记录比较，以此可以得出第2条SQL的CPU占用率明显比第1条低。</p>
+</blockquote>
+</li>
+<li><p>in和not in也要慎用,否则会导致全表扫描</p>
+<ul>
+<li>如: <code>select id from t where num in(1,2,3)</code><br>对于连续的数值，能用between就不要用in 了：<code>select id from t where num between 1 and 3</code></li>
+</ul>
+<blockquote>
+<p>很多时候用<strong>exists</strong>代替<strong>in</strong>是一个好的选择</p>
+</blockquote>
+<blockquote>
+<p>用IN写出来的SQL的优点是比较容易写及清晰易懂,这比较适合现代软件开发的风格。但是用IN的SQL性能总是比较低的，而exists要远比第一种格式的效率高。</p>
+</blockquote>
+</li>
+<li><p>LIKE操作符可以应用通配符查询，里面的通配符组合可能达到几乎是任意的查询，但是如果用得不好则会产生性能上的问题。<br><code>like‘a%’</code>使用索引，<code>like‘%a’</code>不使用索引，<br>尽量避免用<code>select * from t where name like &#39;%x%&#39;</code>类型的模糊查询，因为%在前面的话是无法利用到索引，应该找寻替代方式或用前置条件语句把like查找之前的行数减到最低。</p>
+</li>
+<li><p>注意Union和Union all 的区别<br>union和union all的区别是, union会自动压缩多个结果集合中的重复结果，而union all则将所有的结果全部显示出来，不管是不是重复。</p>
+<ul>
+<li>Union:对两个结果集进行并集操作，<strong>不包括重复行</strong>，同时进行<strong>默认规则的排序</strong>;</li>
+<li>Union All:对两个结果集进行并集操作，<strong>包括重复行</strong>，<strong>不进行排序</strong>;</li>
+</ul>
+<blockquote>
+<p>推荐方案:采用UNION ALL操作符替代UNION，因为UNION ALL操作只是简单的将两个结果合并后就返回。</p>
+</blockquote>
+</li>
+<li><p>注意使用DISTINCT，在没有必要时不要用，它同UNION一样会使查询变慢。</p>
+</li>
+<li><p>Update语句，如果只更改1、2个字段，不要Update全部字段，否则频繁调用会引起明显的性能消耗，同时带来大量日志。</p>
+</li>
+<li><p>慎用delete</p>
+<blockquote>
+<p>一般在存储过程中或多或少都会实现一些删除数据的逻辑。对小数量的表来说，问题倒是不大。但对于大数据量的表来说，采用delete删除数据会对储存过程的性能产生一定的影响。因为delete采用的是全表逐条扫描的方式进行，是一种事务性操作，会计入SQL Server的事务日志中。不但增加了运行时间，同时也频繁写入LOG文件，导致LOG文件过大，过分消耗磁盘空间。所以，可以用<br>truncate操作代替delete,truncate并不会计入事务日志中，同时也是不带条件的删除，执行速度很快。又或者直接drop掉表重新创建，有时都会比delete来得快。</p>
+</blockquote>
+</li>
+<li><p>索引并不是越多越好,索引固然可以提高相应的select的效率，但同时也降低了insert及update 的效率，因为insert 或update 时有可能会重建索引，所以怎样建索引需要慎重考虑，视具体情况而定。<strong>一个表的索引数最好不要超过6个</strong>，若太多则应考虑一些不常使用到的列上建的索引是否有必要。</p>
+</li>
+<li><p>合理使用临时表</p>
+<ul>
+<li>避免频繁创建和删除临时表，以减少系统表资源的消耗。临时表并不是不可使用，适当地使用它们可以使某些例程更有效，例如，当需要重复引用大型表或常用表中的某个数据集时。但是，对于一次性事件，最好使用导出表。</li>
+<li>在新建临时表时，如果一次性插入数据量很大，那么可以使用select into代替create table，避免造成大量log ，以提高速度;如果数据量不大，为了缓和系统表的资源，应先create table，然后insert。</li>
+</ul>
+</li>
+</ol>
+<h3 id="二、索引与视图"><a href="#二、索引与视图" class="headerlink" title="二、索引与视图"></a>二、索引与视图</h3><h4 id="2-1-索引操作"><a href="#2-1-索引操作" class="headerlink" title="2.1 索引操作"></a>2.1 索引操作</h4><blockquote>
+<p>用户对数据库最常用的操作就是查询数据。在数据量比较大时，搜索满足条件的数据可能会花费很长时间，从而占用较多的服务器资源。为了提高数据检索的能力，在数据库中引入了索引的概念。</p>
+</blockquote>
+<h5 id="2-1-1-索引的概述"><a href="#2-1-1-索引的概述" class="headerlink" title="2.1.1 索引的概述"></a>2.1.1 索引的概述</h5><p>​		数据库中的索引是&#x3D;&#x3D;一个表中所包含的值的列表&#x3D;&#x3D;,其中注明了&#x3D;&#x3D;表中包含的某列(或某些列)的值以及各个值所对应的记录存储位置&#x3D;&#x3D;。可以为表中的单个列建立索引，也可以为一组列建立索引。</p>
+<h5 id="2-1-2-索引的作用"><a href="#2-1-2-索引的作用" class="headerlink" title="2.1.2 索引的作用"></a>2.1.2 索引的作用</h5><ol>
+<li>可以大大加快数据检索速度。在检索数据过程中自动进行优化，提高系统性能。</li>
+<li>可以加速表与表之间的连接。</li>
+<li>可以显著减少查询中分组和排序的时间。</li>
+</ol>
+<h5 id="2-1-3-索引的缺点"><a href="#2-1-3-索引的缺点" class="headerlink" title="2.1.3 索引的缺点"></a>2.1.3 索引的缺点</h5><ol>
+<li>创建索引需花费时间。</li>
+<li>每建一个索引都需要花费一定的存储空间。</li>
+<li>当数据变化时，需要重新维护索引。</li>
+</ol>
+<h5 id="2-1-4-索引类型"><a href="#2-1-4-索引类型" class="headerlink" title="2.1.4 索引类型"></a>2.1.4 索引类型</h5><ol>
+<li><p>聚集索引</p>
+<ul>
+<li>在聚集索引中，表中各行的<strong>物理顺序与索引键值</strong>的逻辑（索引）顺序相同。表只能包含一个聚集索引，聚集索引通常建在有<strong>大量唯一值</strong>及<strong>不常更新</strong>的列上，聚集索引常用于搜索范围值特别有效。</li>
+</ul>
+</li>
+<li><p>非聚集索引</p>
+<ul>
+<li><p>非聚集索引<strong>具有完全独立于数据行的结构</strong>，非聚集索引每张表可以创建249个。</p>
+</li>
+<li><p>非聚集索引常用于：</p>
+<ul>
+<li>在join, where及group by子句上出现的列。</li>
+<li>列的值常常更新。</li>
+<li>外键对应的列。</li>
+</ul>
+</li>
+<li><p>例：</p>
+</li>
+<li><p>&#96;&#96;&#96;sql<br>Student(StuID,StuName,Sex,DepID),DepID在Student关系中外键<br>Department(DepId,DepName)</p>
+<p>SC(StuID,CourseID,Grade),StuID和CourseID都是外键</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">##### 2.1.5 索引工作步骤</span><br><span class="line"></span><br><span class="line">![image-20220426151633552](C:/Users/JerryWei/Nutstore/1/我的坚果云/Typora笔记/images/image-20220426151633552.png)</span><br><span class="line"></span><br><span class="line">![image-20220426151829076](C:/Users/JerryWei/Nutstore/1/我的坚果云/Typora笔记/images/image-20220426151829076.png)</span><br><span class="line"></span><br><span class="line">1. SQL SERVER从sysindexes表中获得根页地址。</span><br><span class="line">2. 将要查找的值与根页上的键值相比较。</span><br><span class="line">3. 找到页上小于或等于要查找的值的最大键值。4.页指针指向下一页</span><br><span class="line">   Page 601</span><br><span class="line"></span><br><span class="line">##### 2.1.6 索引特性</span><br><span class="line"></span><br><span class="line">1. 索引增强了连接表，排序，分组的查询。</span><br><span class="line">2. 当修改了创建索引的列，相应的索引也会自动更新。</span><br><span class="line">3. 维护索引需要花费时间，不常用的索引不应创建。</span><br><span class="line">4. 聚集索引通常创建在非聚集索引之前。</span><br><span class="line">5. 通常**外键上创建非聚集索引，主键创建聚集索引**。</span><br><span class="line"></span><br><span class="line">##### 2.1.7 创建索引</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<p>CREATE[UNIQUE][CLUSTERED|NONCUSTERED]INDEX 索引名<br>ON{表名 | 视图名} ( 列名 [ ASC | DESC ] [,…n ] )</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">默认为非聚集索引</span><br><span class="line"></span><br><span class="line">&gt; 示例1:为&quot;student&quot;表创建基于&quot;StuName&quot;列的聚集索引&quot;idxStuName&quot;</span><br><span class="line"></span><br><span class="line">```sql</span><br><span class="line">CREATE CLUSTERED INDEX idxStuName</span><br><span class="line">ON Student(StuName)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>示例2:对”student”表的”DepID”列创建非聚集索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> NONCLUSTERED INDEX idxDepID</span><br><span class="line"><span class="keyword">ON</span> Student (DepID)</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-1-8-删除索引"><a href="#2-1-8-删除索引" class="headerlink" title="2.1.8 删除索引"></a>2.1.8 删除索引</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP INDEX 表名.索引名</span><br></pre></td></tr></table></figure>
+
+<p>示例:删除“student”表的索引“idxStuName”</p>
+<p>解决方案:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP INDEX student.idxStuName</span><br></pre></td></tr></table></figure>
+
+<h5 id="练习：为提升下列查询速度创建索引"><a href="#练习：为提升下列查询速度创建索引" class="headerlink" title="练习：为提升下列查询速度创建索引"></a>练习：为提升下列查询速度创建索引</h5><p>有下列查询语句，由于数据量较大，希望查询时能提升查询速度，该如何建立适当的索引?</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> StuNo,stuName,DepName</span><br><span class="line"><span class="keyword">FROM</span> Student <span class="keyword">JOIN</span> Department</span><br><span class="line"><span class="keyword">ON</span> student.DeptID <span class="operator">=</span> Department.DeptID</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Department(DeptID,DepName),DeptID是主键</span><br><span class="line">Student(StuNo,StuName,DeptID),StuNo是主键，DeptID是外键</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> CLUSTERED INDEX idxStudent <span class="keyword">ON</span> Student(StuNo)</span><br><span class="line"><span class="keyword">CREATE</span> CLUSTERED INDEX idxDepartment <span class="keyword">ON</span> Department(DeptID)</span><br><span class="line"><span class="keyword">CREATE</span> NONCLUSTERED INDEX idxStudentD <span class="keyword">ON</span> Student(DeptID)</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-视图管理"><a href="#2-3-视图管理" class="headerlink" title="2.3 视图管理"></a>2.3 视图管理</h4><blockquote>
+<p>查询数据库原理课程最高分对应的学生信息。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> sc.stuID ,StuName , stusex ,DepID</span><br><span class="line"><span class="keyword">FROM</span> Student <span class="keyword">JOIN</span> sc</span><br><span class="line"><span class="keyword">ON</span> Student.StuID <span class="operator">=</span> sc.stuID <span class="keyword">JOIN</span> Course</span><br><span class="line"><span class="keyword">ON</span> Course.courseID <span class="operator">=</span> sc.courseID</span><br><span class="line"><span class="keyword">WHERE</span> CourseName <span class="operator">=</span> <span class="string">&#x27;database&#x27;</span> <span class="keyword">AND</span></span><br><span class="line">Grade<span class="operator">=</span></span><br><span class="line">(<span class="keyword">SELECT</span> <span class="built_in">max</span>(Grade)</span><br><span class="line">	<span class="keyword">FROM</span> sc</span><br><span class="line">		<span class="keyword">WHERE</span> CourseID <span class="operator">=</span></span><br><span class="line"> 			(<span class="keyword">SELECT</span> CourseID</span><br><span class="line">				<span class="keyword">FROM</span> Course</span><br><span class="line">					<span class="keyword">WHERE</span> CourseName <span class="operator">=</span> <span class="string">&#x27;database&#x27;</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-3-1-视图概念"><a href="#2-3-1-视图概念" class="headerlink" title="2.3.1 视图概念"></a>2.3.1 视图概念</h5><p>​		视图是&#x3D;&#x3D;保存在数据库中的SELECT查询&#x3D;&#x3D;，其内容由查询定义，因此，视图不是真实存在的基础表，而是&#x3D;&#x3D;从一个或者多个表中导出的虚拟的表&#x3D;&#x3D;。</p>
+<p>​		同真实的表一样，视图包含一系列带有名称的列和行数据，但视图中的行和列数据来自由定义视图的查询所引用的表，并且在引用视图时动态生成。</p>
+<p>​		因此，&#x3D;&#x3D;视图所对应的数据并不实际地以视图结构存储在数据库中，而是存储在视图所引用的表中&#x3D;&#x3D;。</p>
+<h5 id="2-3-2-视图特点"><a href="#2-3-2-视图特点" class="headerlink" title="2.3.2 视图特点"></a>2.3.2 视图特点</h5><ol>
+<li><p><strong>简单性</strong></p>
+<p>视图不仅可以简化用户对数据的理解，也可以简化他们的操作。那些被经常使用的查询可以被定义为视图，从而使用户不必为以后的操作每次都指定全部的条件。</p>
+</li>
+<li><p><strong>安全性</strong></p>
+<p>通过视图用户只能查询和修改他们所能见到的数据。数据库中的其他数据则既看不见也取不到。数据库授权命令可以使每个用户对数据库的检索限制到特定的数据库对象上，但不能授权到数据库特定行和特定的列上。通过视图，用户可以被限制在数据的不同子集上。</p>
+</li>
+</ol>
+<h5 id="2-3-3-创建视图"><a href="#2-3-3-创建视图" class="headerlink" title="2.3.3 创建视图"></a>2.3.3 创建视图</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> 视图名</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> 语句</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>示例︰创建视图显示选修了“数据库”课程的学生姓名,所在系,年龄及成绩。</p>
+</blockquote>
+<p><img src="C:/Users/JerryWei/Nutstore/1/我的坚果云/Typora笔记/images/image-20220426153630874.png" alt="image-20220426153630874"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> vwStudentInfowithDB</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> StuName , DepName , stuAge , score</span><br><span class="line"><span class="keyword">FROM</span> student s </span><br><span class="line"><span class="keyword">JOIN</span> sc <span class="keyword">ON</span> s.stuID <span class="operator">=</span> sc.stuID</span><br><span class="line"><span class="keyword">JOIN</span> Course <span class="keyword">ON</span> sc.courseID <span class="operator">=</span> Course.CourseID</span><br><span class="line"><span class="keyword">JOIN</span> Department d <span class="keyword">oN</span> d. DepID <span class="operator">=</span> s. DepID</span><br><span class="line"><span class="keyword">WHERE</span> CourseName <span class="operator">=</span><span class="string">&#x27;数据库&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>示例：创建视图查询其成绩比该课程平均成绩高的学生的学号、课程号及成绩。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">相关子查询:</span><br><span class="line"><span class="keyword">SELECT</span> sc1.student id, course_id, grade</span><br><span class="line">	<span class="keyword">FROM</span> student_course sc1</span><br><span class="line">		<span class="keyword">WHERE</span> sc1.grade <span class="operator">&gt;=</span></span><br><span class="line">			(<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(grade)</span><br><span class="line">				<span class="keyword">FROM</span> student_course sc2</span><br><span class="line">					<span class="keyword">WHERE</span> sc1.course_id <span class="operator">=</span> sc2.course_id)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">解决方案：</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> vwscgreade</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> sc1.student id, course_id, grade</span><br><span class="line">	<span class="keyword">FROM</span> student_course sc1</span><br><span class="line">		<span class="keyword">WHERE</span> sc1.grade <span class="operator">&gt;=</span></span><br><span class="line">			(<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(grade)</span><br><span class="line">				<span class="keyword">FROM</span> student_course sc2</span><br><span class="line">					<span class="keyword">WHERE</span> sc1.course_id <span class="operator">=</span> sc2.course_id)</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-3-4-视图更新"><a href="#2-3-4-视图更新" class="headerlink" title="2.3.4 视图更新"></a>2.3.4 视图更新</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> vwStudentInfowithDB </span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> StuName,DepName,stuAge,score</span><br><span class="line">FROMStudent s <span class="keyword">JOIN</span> sc </span><br><span class="line"><span class="keyword">ON</span> s.stuID <span class="operator">=</span> sc.stuIDJOIN Course </span><br><span class="line"><span class="keyword">ON</span> sc.courseID <span class="operator">=</span> Course.courseIDJOIN Department d </span><br><span class="line"><span class="keyword">ON</span> d.DepID <span class="operator">=</span> s.DepID</span><br><span class="line"><span class="keyword">WHERE</span> CourseName <span class="operator">=</span>数据库’</span><br></pre></td></tr></table></figure>
+
+<p>如要更新‘1’号学生的年龄和成绩:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPDATE vwStudentInfowithDB</span><br><span class="line">SET StuAge =StuAge+1 ,Score = score + 10</span><br><span class="line">WHERE StuID = 1</span><br></pre></td></tr></table></figure>
+
+<p>编译器将报错，UPDATE只更新一个表，视图不能同时修改来自于2张或2张以上基表的数据</p>
+<p>正确的更新方法:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> vwStudentInfowithDB</span><br><span class="line"><span class="keyword">SET</span> stuAge <span class="operator">=</span> StuAge<span class="operator">+</span><span class="number">1</span></span><br><span class="line"><span class="keyword">WHERE</span> StuID <span class="operator">=</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">UPDATE</span> vwStudentInfowithDB</span><br><span class="line"><span class="keyword">SET</span> Score <span class="operator">=</span> score <span class="operator">+</span> <span class="number">10</span></span><br><span class="line"><span class="keyword">WHERE</span> StuID <span class="operator">=</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3-5-修改视图"><a href="#2-3-5-修改视图" class="headerlink" title="2.3.5 修改视图"></a>2.3.5 修改视图</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">VIEW</span> 视图名</span><br><span class="line"><span class="keyword">AS</span> <span class="keyword">SELECT</span>语句</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3-6-删除视图"><a href="#2-3-6-删除视图" class="headerlink" title="2.3.6 删除视图"></a>2.3.6 删除视图</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> 视图名</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3-7-查看视图"><a href="#2-3-7-查看视图" class="headerlink" title="2.3.7 查看视图"></a>2.3.7 查看视图</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">exec</span> Sp_helptext 视图名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三、表达式与流程控制"><a href="#三、表达式与流程控制" class="headerlink" title="三、表达式与流程控制"></a>三、表达式与流程控制</h3><h4 id="3-1-常量"><a href="#3-1-常量" class="headerlink" title="3.1 常量"></a>3.1 常量</h4><p>常量也称为标量值，是表示一个特定数据值的符号。常量的格式取决于它所表示的值的数据类型。</p>
+<p>字符串常量<br>字符串常量用单引号括起来。如果要在字符串中包含单引号，则可以使用连续的两个单引号来表示。<br>例如: <code>&#39;Chinese&#39;</code></p>
+<p>二进制常量<br>二进制常量使用0x作为前辍，后面跟随十六进制数字字符串。</p>
+<p>例如：0xAE，0x12FC</p>
+<p>bit常量<br>bit常量使用ralse或True表示，如果使用一个大于1的数字，它将被转换为1。</p>
+<p>datetime常量<br>datetime常量使用单引号括起来的特定格式的字符日期值表示。</p>
+<p>例如:’2011-09-16 14:30:24’</p>
+<p>5.整型常量<br>由正、负号和数字o~9组成，正号可以省略。</p>
+<p>例如:18942 +145345234 -2147483648</p>
+<p>6.decimal常量<br>由正、负号、小数点、数字o~9组成，正号可以省略。</p>
+<p>例如：1894.1204 2.0</p>
+<p>7.float和real常量<br>使用科学记数法表示。</p>
+<p>例如:101.5E5 	0.5E-2 	+123E-3 	-12E5</p>
+<p>8.money常量<br>以可选小数点和可选货币符号作为前缀的一串数字。可以带正、负号。</p>
+<p>例如:$12 	$542023.14 	-$45.56 	+$423456.99</p>
+<h4 id="3-2-变量"><a href="#3-2-变量" class="headerlink" title="3.2 变量"></a>3.2 变量</h4><h5 id="3-2-1-局部变量的定义"><a href="#3-2-1-局部变量的定义" class="headerlink" title="3.2.1 局部变量的定义"></a>3.2.1 局部变量的定义</h5><p>​		变量是可以保存特定类型的单个数据值的对象，SQL Server的变量分为两种:用户自己定义的局部变量和系统提供的全局变量。</p>
+<p>​		局部变量的作用范围是在其中定义局部变量的<strong>批处理、存储过程或语句块</strong>。常用来保存临时数据。<br>​		局部变量的定义：<code>DECLARE&#123;@局部变量名 数据类型&#125;[ ,..n]</code></p>
+<p>注意：</p>
+<ul>
+<li>局部变量名：必须以@开头，符合标识符的命名规则</li>
+<li>数据类型：系统定义的数据类型；用户定义数据类型。<ul>
+<li>&#x3D;&#x3D;不能是text、ntext或image数据类型&#x3D;&#x3D;。</li>
+</ul>
+</li>
+<li>局部变量定义后初始值为NULL。</li>
+</ul>
+<h5 id="3-2-2-局部变量的作用范围"><a href="#3-2-2-局部变量的作用范围" class="headerlink" title="3.2.2 局部变量的作用范围"></a>3.2.2 局部变量的作用范围</h5><p>1.批处理</p>
+<p>​		是客户端作为一个单元发出的一个或多个SQL语句的集合，从应用程序一次性地发送到SQL Server执行;</p>
+<p>2.语句块</p>
+<p>​		包含在Begin和End语句之间的多个Transact-SQL语句组合为一个语句块;</p>
+<p>3.NULL</p>
+<p>​		空值。在数据内NULL是特殊值，代表未知值的概念。<br>​		NULL不同于空字符或0.空字符实际上是有效字符，0是有效数字。NULL也是不同于零长度字符串，NULL只是表示该值未知这一概念。</p>
+<p>3.2.3 举例</p>
+<blockquote>
+<p>定义变量@Mycounter为int类型</p>
+</blockquote>
+<p><code>DECLARE @MyCounter int</code></p>
+<blockquote>
+<p>定义变量@LastName为nvarchar (30)类型，定义变量@FirstName为nvarchar(20)类型，定义变量estate为nchar(2)类型:</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DECLARE @LastName nvarchar (30),@FirstNamenvarchar (20) ,@state nchar (2)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>【例4-5】执行下列语句将产生语法错误，因为在一个批处理中所引用的变量是在另一个批处理中定义的。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> <span class="variable">@Myvariable</span> <span class="type">int</span></span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@Myvariable</span> <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">GO			<span class="comment">--结束当前批处理</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> Employees</span><br><span class="line"><span class="keyword">WHERE</span> EmployeeID <span class="operator">=</span> <span class="variable">@Myvariable</span></span><br></pre></td></tr></table></figure>
+
+<p>3.2.3 局部变量的赋值<br>(1）用SET语句给局部变量赋值<br>格式:<code>SET @局部变量名 = 表达式</code></p>
+<blockquote>
+<p>【例】定义局部变量@myvar，并为其赋值，最后显示@myvar的值。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> <span class="variable">@myvar</span> <span class="type">char</span>(<span class="number">20</span>)</span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@myvar</span> <span class="operator">=</span> <span class="string">&#x27;This is a test&#x27;</span><span class="comment">--用SET赋值</span></span><br><span class="line">PRINT <span class="variable">@myvar</span>		<span class="comment">--用PRINT语句显示</span></span><br></pre></td></tr></table></figure>
+
+<p>(2)用SELECT语句给局部变量赋值:<br>格式:SELECT{@局部变量名&#x3D;表达式} [ ,…n]<br>【例】定义局部变量@myvar1和emyvar2，并为它们赋值，最后显示myvar1和@myvar2的值:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DECLARE @myvar1 char (20) , @myvar2 char (20)</span><br><span class="line">SELECT @myvar1 = &#x27;He1lo! &#x27; , @myvar2 = &#x27;How are you !&#x27; —―用SELECT赋值</span><br><span class="line">SELECT @myvar1 , @myvar2 --用SELECT显示</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:/Users/JerryWei/Nutstore/1/我的坚果云/Typora笔记/images/image-20220426165644872.png" alt="image-20220426165644872"></p>
+<p>全局变量是SQL server系统内部使用的变量，全局变量具有以下特点:</p>
+<p>全局变量不是由用户的程序定义的，它们是SQL Server系统在服务器级定义的。<br>引用全局变量时，必须以标记符“@@”开头。<br>用户可以在程序中用全局变量来测试系统的设定值或者是Transact-sQL命令执行后的状态值。<br>例如:<br>@@VERSION:返回SQL. Server当前安装的日期、版本和处理器类型;</p>
+<p>@@CONNEC’TIONS:返回自上次启动SQL Server以来连接或试图连接的次数;</p>
+<p>@@LANGUAGE:用于返回当前使用的语言名。</p>
+<h4 id="3-3-表达式"><a href="#3-3-表达式" class="headerlink" title="3.3 表达式"></a>3.3 表达式</h4><h5 id="3-3-1、算术表达式"><a href="#3-3-1、算术表达式" class="headerlink" title="3.3.1、算术表达式"></a>3.3.1、算术表达式</h5><p>算术运算符包括:+、-、*、&#x2F;、%(取模)<br>%:用于返回一个整数除以另一个整数的余数。</p>
+<p>例如:12 % 5 &#x3D; 2<br>由算术运算符组成的表达式称为算术表达式。</p>
+<h5 id="3-3-2、字符串串联运算符"><a href="#3-3-2、字符串串联运算符" class="headerlink" title="3.3.2、字符串串联运算符"></a>3.3.2、字符串串联运算符</h5><p>字符串串联运算符：+<br>作用:将两个字符串串联起来，构成字符串表达式。</p>
+<p>例如: ‘abc’ +’def’：结果为’ abcdef’；’123’+’456’：结果为’123456’</p>
+<h5 id="3-3-3、赋值运算符"><a href="#3-3-3、赋值运算符" class="headerlink" title="3.3.3、赋值运算符"></a>3.3.3、赋值运算符</h5><p>赋值运算符：&#x3D;<br>例如：<code>DECLARE @MyCounter int SET @MyCounter = 1</code></p>
+<h5 id="3-3-4、比较运算符"><a href="#3-3-4、比较运算符" class="headerlink" title="3.3.4、比较运算符"></a>3.3.4、比较运算符</h5><p>比较运算符: &#x3D; &gt; &lt; &gt;&#x3D; !&#x3D; !&lt; !&gt;</p>
+<p>作用:比较两个表达式的大小。</p>
+<p>比较结果:布尔值TRUE、FALSE、UNKNOWN </p>
+<p>TRUE:表示表达式的结果为真<br>FALSE :表示表达式的结果为假</p>
+<p>UNKNOWN:当SET ANSI_NULLS为ON时，带有一个或两个NULL表达式的比较运算返回UNKNOWN。<br>当SETANSI_NULLS为OFF时，上述规则同样适用，但当两个表达式都为NULL时，返回结果为TRUE。例如，NULL &#x3D;NULL返回TRUE。总结如下:</p>
+<ol>
+<li>SET ANSI_NULLS ON: null与null不相等</li>
+<li>SET ANSI_NULLS OFF: null与null相等</li>
+</ol>
+<h5 id="3-3-5、逻辑运算符"><a href="#3-3-5、逻辑运算符" class="headerlink" title="3.3.5、逻辑运算符"></a>3.3.5、逻辑运算符</h5><p>逻辑运算符:NOT AND OR</p>
+<p>作用:对具有布尔值的表达式进行运算。</p>
+<p>运算结果:TRUE、FALSE。</p>
+<ul>
+<li>NOT：一元运算符，对布尔表达式的值取反;</li>
+<li>AND：只有两个布尔表达式的值都为TRUE，运算结果才为TRUE，否则结果为FA工SE;</li>
+<li>OR：如果两个布尔表达式中的一个为TRUE，那么运算结果为TRUE。只有两个布尔表达式都为FALSE，运算结果才为FALSE。</li>
+</ul>
+<blockquote>
+<p>例：<br>NOT (3 &gt; 8)	结果为TRUE<br>(3 &gt; 8) AND (5 &lt; 6)	结果为FALSE<br>(3 &gt; 8) OR (5 &lt; 6)	结果为TRUE</p>
+<p>用关系运算符或逻辑运算符组合成的表达式都具有布尔值TRUE或FALSE，这种表达式称为布尔表达式。</p>
+</blockquote>
+<p>在对数据库中的数据进行查询时，常用比较运算符和逻辑运算符来构造查询条件。</p>
+<blockquote>
+<p>例如：表示条件“x在区间[a,b]内”，在数学上写成a≤x≤b,但在SQL Server中应写成布尔表达式:x&gt;&#x3D;a AND x&lt;&#x3D;b</p>
+<p>例如:表示条件“a和b之一为0，但不能同时为0”的布尔表达式可以写成:<br>(a&#x3D;0 AND b&lt;&gt;0)OR(a&lt;&gt;0 AND b&#x3D;0)</p>
+</blockquote>
+<h5 id="3-3-6、位运算符"><a href="#3-3-6、位运算符" class="headerlink" title="3.3.6、位运算符"></a>3.3.6、位运算符</h5><ol>
+<li>&amp;：按位与（两个操作数)</li>
+<li>|：按位或（两个操作数)</li>
+<li>^：按位逻辑异或（两个操作数)</li>
+</ol>
+<ul>
+<li>作用:在两个整型表达式之间执行位操作。</li>
+<li>例题:判断以下各打印语句的打印结构。<ul>
+<li>（1）PRINT 13 &amp; 24： 01101&amp;11000，结果为二进制1000，即打印8;</li>
+<li>（2）PRINT 13 | 24： 01101 | 11000，结果为二进制11101，即打印29;</li>
+<li>（3）PRINT 13 ^ 24： 01101 ^ 11000，结果为二进制10101，结果为21.</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-3-7、运算符优先级别"><a href="#3-3-7、运算符优先级别" class="headerlink" title="3.3.7、运算符优先级别"></a>3.3.7、运算符优先级别</h5><p>从高到低排序：</p>
+<ol>
+<li>+(正)、 -(负)、~(按位NOT逻辑非)</li>
+<li>*(乘)、&#x2F;(除)、%（模)</li>
+<li>+(加)、(+串联)、-(减)</li>
+<li>&#x3D;,&gt;,&lt;,&gt;&#x3D;,&lt;&#x3D;,&lt;&gt;, !&#x3D;,!&gt;, !&lt;(比较运算符)</li>
+<li>^(位异或)、&amp;(位与)、I(位或)</li>
+<li>NOT</li>
+<li>AND</li>
+<li>ALL、ANY、BETWEEN、IN、LIKE、OR、SOME</li>
+<li>&#x3D;(赋值)</li>
+</ol>
+<h5 id="3-3-8-例题：运算符的优先次序"><a href="#3-3-8-例题：运算符的优先次序" class="headerlink" title="3.3.8 例题：运算符的优先次序"></a>3.3.8 例题：运算符的优先次序</h5><p>例：设已经定义了局部变量@a、@b、@c、@d，且@a&#x3D;3,@b&#x3D;5,@c&#x3D;-1,@d&#x3D;7,则以下表达式按标注①~⑩的顺序进行运算。<br>@a+@b&gt;@c+@d AND @a&gt;&#x3D;5 OR NOT @c&gt;0 OR @d&lt;0</p>
+<p><img src="C:/Users/JerryWei/Nutstore/1/我的坚果云/Typora笔记/images/image-20220426162854604.png" alt="image-20220426162854604"></p>
+<h4 id="3-4-流程控制语句"><a href="#3-4-流程控制语句" class="headerlink" title="3.4 流程控制语句"></a>3.4 流程控制语句</h4><p>流程控制语句用于控制Transact-SQL语句、语句块和存储过程的执行流程。这些语句可用于Transact-SQL语句、批处理和存储过程中。如果不使用流程控制语句，则各Transact-SQL语句按其出现的先后顺序执行。使用流程控制语句可以按需要控制语句的执行次序和执行分支。</p>
+<h5 id="3-4-1-BEGIN…END语句"><a href="#3-4-1-BEGIN…END语句" class="headerlink" title="3.4.1 BEGIN…END语句"></a>3.4.1 BEGIN…END语句</h5><p>​		BEGIN…END语句用于将多个Transact-SQL语句定义成一个语句块。语句块可以在程序中视为一个单元处理。BEGIN…END语句的语法如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BEGIN</span><br><span class="line">&#123; </span><br><span class="line">	sql语句|语句块</span><br><span class="line">&#125;</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+
+<p>其中，sql语句为一条Transact-SQL语句;语句块为用BEGIN和END定义的语句块。可以看出，在一个语句块中可以包含另一个语句块。</p>
+<h5 id="3-4-2-lF…ELSE语句"><a href="#3-4-2-lF…ELSE语句" class="headerlink" title="3.4.2 lF…ELSE语句"></a>3.4.2 lF…ELSE语句</h5><p>IF…ELSE语句的语法如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IF 布尔表达式</span><br><span class="line">&#123;sql语句1|语句块1 &#125;</span><br><span class="line">[ELSE</span><br><span class="line">&#123;sql语句2|语句块2&#125;]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>布尔表达式：返回TRUE或FALSE的表达式;</li>
+<li>SQL语句:一条Transact-SQL语句;</li>
+<li>语句块：用BEGIN和END定义的语句组。</li>
+<li>功能：当布尔表达式的值为TRUE时，执行sql语句1或语句块1;当布尔表达式的值为FALSE时，执行sql语句2或语句块2。如果省略ELSE部分，则表示当布尔表达式的值为FALSE时不执行任何操作。</li>
+</ul>
+<blockquote>
+<p>【例】设有一个“学生信息”数据库，数据库中有一个“Student”表，该表包含StuID、StuName、StuBirthDatc等列。要给本月出生的学生举办庆祝生日会，每月1日选出要过生日的学生名单。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">解决方案:</span><br><span class="line"><span class="keyword">DECLARE</span><span class="variable">@Today</span> <span class="type">int</span></span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@Today</span> <span class="operator">=</span> <span class="keyword">DAY</span>(GETDATE())</span><br><span class="line">IF(<span class="variable">@Today</span><span class="operator">=</span><span class="number">1</span>)</span><br><span class="line">    <span class="keyword">BEGIN</span></span><br><span class="line">        <span class="keyword">SELECT</span> StuID,StuName </span><br><span class="line">        <span class="keyword">FROM</span> Student</span><br><span class="line">        <span class="keyword">WHERE</span> <span class="keyword">MONTH</span>(StuBirthDate)<span class="operator">=</span><span class="keyword">MONTH</span>(GETDATE())</span><br><span class="line">	<span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>【例】已知“图书借阅信息数据库”的图书信息表bookinfo中，表示书价的列为“价格”，表示图书种类的列为“图书类别编号”，表示书名的列为“图书名称”。<br>编程序实现：如果T类图书的平均价格大于50，就显示文本:Average title price is more than $50;否则提示:“The following titles are excellent computer books:”列出相应的书名。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">use 图书借阅信息数据库</span><br><span class="line">if (<span class="keyword">select</span> <span class="built_in">AVG</span>(价格)<span class="keyword">from</span> Bookinfo <span class="keyword">where</span>图书类别编号<span class="operator">=</span><span class="string">&#x27;T&#x27;</span> )<span class="operator">&lt;</span><span class="number">50</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	print <span class="string">&#x27; The following titles are excellent computer books : &#x27;</span></span><br><span class="line">	print <span class="string">&#x27;&#x27;</span></span><br><span class="line">	<span class="keyword">select</span> 图书名称 <span class="keyword">from</span> Bookinfowhere图书类别编号<span class="operator">=</span><span class="string">&#x27;T&#x27;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	print <span class="string">&#x27;Average title price is more than $50.&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="3-4-3-CASE函数"><a href="#3-4-3-CASE函数" class="headerlink" title="3.4.3 CASE函数"></a>3.4.3 CASE函数</h5><p>CASE函数可以计算多个条件式，并返回其中一个符合条件的结果表达式。按照使用形式的不同，可以分为简单CASE函数和CASE搜索函数:</p>
+<ul>
+<li>简单CASE函数将某个表达式与一组简单表达式进行比较以确定返回的结果。</li>
+<li>CASE搜索函数计算一组布尔表达式以确定返回的结果。</li>
+</ul>
+<p>1.简单CASE函数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CASE</span> 输入表达式</span><br><span class="line">    <span class="keyword">WHEN</span> when_表达式 <span class="keyword">THEN</span> 结果表达式</span><br><span class="line">    [ ...n ]</span><br><span class="line">    [<span class="keyword">ELSE</span>结果表达式]</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>功能：:计算输入表达式的值，依次与每个WHEN子句中的when_表达式进行比较，直到发现第一个与输入表达式相等的表达式时，便返回该WHEN子句的THEN后面所指定的结果表达式。如果不存在与输入表达式相等的when_表达式，则当指定ELSE子句时将返回ELSE字句指定的结果表达式，若没有指定ELSE子句，则返回NULL值。</p>
+</blockquote>
+<p>例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">写法<span class="number">1</span>：</span><br><span class="line"><span class="keyword">SELECT</span> Sno,Sname</span><br><span class="line">	<span class="keyword">case</span> sex</span><br><span class="line">		<span class="keyword">when</span> <span class="number">0</span> <span class="keyword">then</span> <span class="string">&#x27;女&#x27;</span></span><br><span class="line">		<span class="keyword">when</span> <span class="number">1</span> <span class="keyword">then</span> <span class="string">&#x27;男&#x27;</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">From</span> Student</span><br><span class="line"></span><br><span class="line">写法<span class="number">2</span>：</span><br><span class="line"><span class="keyword">SELECT</span> Sno,Sname</span><br><span class="line">	<span class="keyword">case</span> sex</span><br><span class="line">		<span class="keyword">when</span> sex<span class="operator">=</span><span class="number">0</span> <span class="keyword">then</span> <span class="string">&#x27;女&#x27;</span></span><br><span class="line">		<span class="keyword">else</span> <span class="string">&#x27;男&#x27;</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">From</span> Student</span><br></pre></td></tr></table></figure>
+
+<p>例:将“图书信息借阅数据库”中的图书信息表(bookinfo)中各类图书类别编号显示为具体的图书类别名称。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">use 图书借阅信息数据库</span><br><span class="line"><span class="keyword">select</span> 图书名称,图书类别名称<span class="operator">=</span></span><br><span class="line">	<span class="keyword">case</span> 图书类别编号</span><br><span class="line">        <span class="keyword">when</span> <span class="string">&#x27;B&#x27;</span> <span class="keyword">then</span> <span class="string">&#x27;哲学宗教&#x27;</span></span><br><span class="line">        <span class="keyword">when</span> <span class="string">&#x27;H&#x27;</span><span class="keyword">then</span> <span class="string">&#x27;语言文学&#x27;</span></span><br><span class="line">        <span class="keyword">when</span> <span class="string">&#x27;I&#x27;</span> <span class="keyword">then</span> <span class="string">&#x27;文学&#x27;</span></span><br><span class="line">        <span class="keyword">when</span> <span class="string">&#x27;T&#x27;</span> <span class="keyword">then</span> <span class="string">&#x27;工业技术&#x27;</span></span><br><span class="line">    	<span class="keyword">else</span> <span class="string">&#x27;Not yet categorized&#x27;</span></span><br><span class="line">	<span class="keyword">end</span>,价格</span><br><span class="line"><span class="keyword">from</span> BookInfo</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>例:将“图书信息借阅数据库”中各种价位的图书给与不同的提示。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use图书借阅信息数据库</span><br><span class="line">select图书名称，价格，价格类别-</span><br><span class="line">case</span><br><span class="line">when 价格 is null then &#x27;Not yet priced &#x27;when价格&lt;30 then &#x27;very Reasonable Title &#x27;when价格&gt;=30 and价格&lt;50 then &#x27;Coffee TableTitle&#x27;</span><br><span class="line">else &#x27;Expensive book ! &#x27;end</span><br><span class="line">from BookInfo</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>【例】将Student表显示为如下格式:<br>学号 年龄<br>Ao0001小于20岁A00002<br>超过20岁</p>
+</blockquote>
+<p>SELECT’学号’&#x3D; StuID，’年龄’&#x3D;<br>CASE<br>WHEN datediff(yy,StuBirthDate,getdate ())&lt;20 THEN ‘小于20岁’<br>WHEN datediff(yy, StuBirthDate, getdate( ) )&gt;&#x3D;20THEN’超过20岁’<br>END<br>FROM student</p>
+<h5 id="3-4-4-WHILE循环"><a href="#3-4-4-WHILE循环" class="headerlink" title="3.4.4 WHILE循环"></a>3.4.4 WHILE循环</h5><p>格式:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WHILE 布尔表达式&#123;sql语句|语句块&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>功能:从WHILE语句开始，计算布尔表达式的值，当布尔表达式的值为TRUE时，执行循环体，然后返回WHILE语句，再计算布尔表达式的值，如果仍为TRUE，则再执行循环体，…….，直到某次布尔表达式的值为FALSE时，则不执行循环体，而直接执行WHILE循环之后的其他语句。</p>
+<p>【例】对1到100之间的数求和。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">DECLARE @i int,@sum int</span><br><span class="line">SET @i=1</span><br><span class="line">SET @sum=0</span><br><span class="line">WHILE @i&lt;=100</span><br><span class="line">    BEGIN</span><br><span class="line">    SET @sum=@sum+@i</span><br><span class="line">    SET @i-@i+1</span><br><span class="line">    END</span><br><span class="line">PRINT&#x27;1到100之间数的和为&#x27;+Convert(char(10),@sum)</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="3-4-5-BREAK和CONTINUE"><a href="#3-4-5-BREAK和CONTINUE" class="headerlink" title="3.4.5 BREAK和CONTINUE"></a>3.4.5 BREAK和CONTINUE</h5><p>在循环体中可以包含语句:</p>
+<ul>
+<li><p>BREAK语句<br>执行BREAK语句将完全跳出循环，结束WHILE循环的执行。</p>
+</li>
+<li><p>CONTINUE语句<br>执行CONTINUE语句将使循环跳过CONTINUE语句后面的语句，回到WHILE循环的第一条语句。</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> <span class="variable">@i</span> <span class="type">int</span> ,<span class="variable">@sum</span> <span class="type">int</span> </span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@i</span><span class="operator">=</span><span class="number">0</span></span><br><span class="line">WHILE i<span class="operator">&lt;</span><span class="number">10</span></span><br><span class="line"><span class="keyword">BEGIN</span>				<span class="comment">--CONTINUE</span></span><br><span class="line"><span class="keyword">SET</span> ei<span class="operator">=</span><span class="variable">@i</span><span class="operator">+</span><span class="number">1</span></span><br><span class="line">IF (ei <span class="operator">=</span> <span class="number">6</span>)</span><br><span class="line">PRINT <span class="keyword">convert</span>(<span class="type">char</span> (<span class="number">10</span>) ,<span class="variable">@i</span>)</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>【例】求1到100之间的奇数和。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> <span class="variable">@i</span> <span class="type">int</span>,<span class="variable">@sum</span> <span class="type">int</span></span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@i</span><span class="operator">=</span><span class="number">1</span></span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@sum</span><span class="operator">=</span><span class="number">0</span></span><br><span class="line">WHILE <span class="variable">@i</span><span class="operator">&lt;=</span><span class="number">100</span></span><br><span class="line">    <span class="keyword">BEGIN</span></span><br><span class="line">        <span class="keyword">SET</span> <span class="variable">@sum</span><span class="operator">=</span><span class="variable">@sum</span><span class="operator">+</span><span class="variable">@i</span></span><br><span class="line">        <span class="keyword">SET</span> <span class="variable">@i</span><span class="operator">=</span><span class="variable">@i</span><span class="operator">+</span><span class="number">2</span></span><br><span class="line">    <span class="keyword">END</span></span><br><span class="line">PRINT<span class="string">&#x27;1到100之间数的和为&#x27;</span><span class="operator">+</span><span class="keyword">Convert</span>(<span class="type">char</span>(<span class="number">19</span>),<span class="variable">@sum</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以上代码可以被改写为</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span><span class="variable">@i</span> <span class="type">int</span>,<span class="variable">@sum</span> <span class="type">int</span> </span><br><span class="line"><span class="keyword">SET</span> i<span class="operator">=</span><span class="number">0</span></span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@sum</span><span class="operator">=</span><span class="number">0</span></span><br><span class="line">WHILE <span class="variable">@i</span><span class="operator">&gt;=</span><span class="number">0</span></span><br><span class="line">    <span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">SET</span> <span class="variable">@i</span><span class="operator">=</span><span class="variable">@i</span><span class="operator">+</span><span class="number">1</span></span><br><span class="line">    if <span class="variable">@i</span><span class="operator">&lt;=</span><span class="number">100</span></span><br><span class="line">        if(<span class="variable">@i</span> <span class="operator">%</span> <span class="number">2</span>)<span class="operator">=</span><span class="number">0</span></span><br><span class="line">            CONTINUE</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">set</span> <span class="variable">@sum</span><span class="operator">=</span><span class="variable">@sum</span><span class="operator">+</span><span class="variable">@i</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">begin</span></span><br><span class="line">            print <span class="string">&#x27;1到之间的奇数之和为&#x27;</span><span class="operator">+</span><span class="keyword">Convert</span> (<span class="type">char</span> (<span class="number">10</span>) ,<span class="variable">@sum</span>)</span><br><span class="line">            BREAK</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="3-4-6-RETURN语句"><a href="#3-4-6-RETURN语句" class="headerlink" title="3.4.6 RETURN语句"></a>3.4.6 RETURN语句</h5><ul>
+<li><p>格式：<code>RETURN | 整数表达式 |</code></p>
+</li>
+<li><p>功能：用于无条件地终止一个查询、存储过程或者批处理，当执行RETURN语句时，位于RETURN语句之后的程序将不会被执行。</p>
+</li>
+<li><p>说明：在存储过程中可以在RETURN后面使用一个具有整数值的表达式，用于向调用过程或应用程序返回整型值。</p>
+</li>
+<li><p>(关于存储过程的使用将在第7章介绍)</p>
+</li>
+</ul>
+<h5 id="3-4-7-GOTO语句"><a href="#3-4-7-GOTO语句" class="headerlink" title="3.4.7 GOTO语句"></a>3.4.7 GOTO语句</h5><ul>
+<li><p>格式: <code>GOTO 标号</code></p>
+</li>
+<li><p>功能:用于改变程序的执行流程，使程序直接跳到标有标号的位置处继续执行，而位于GOTO语句和标号之间的语句不会被执行。</p>
+</li>
+<li><p>说明:标号必须是一个合法的标识符。</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">以上代码可以改写为:</span><br><span class="line"><span class="keyword">DECLARE</span> count <span class="type">int</span>, <span class="variable">@sum</span> intset , <span class="variable">@sum</span><span class="operator">=</span><span class="number">0</span></span><br><span class="line"><span class="keyword">set</span> count<span class="operator">=</span><span class="number">1</span></span><br><span class="line">label_1:</span><br><span class="line"><span class="keyword">set</span> <span class="variable">@sum</span><span class="operator">=</span><span class="variable">@sum</span><span class="operator">+</span><span class="variable">@count</span></span><br><span class="line"><span class="keyword">set</span> <span class="variable">@count</span><span class="operator">=</span>count<span class="operator">+</span><span class="number">1</span></span><br><span class="line">IF <span class="variable">@count</span><span class="operator">&lt;=</span><span class="number">50</span></span><br><span class="line">GOTO label_1</span><br><span class="line">print str (<span class="variable">@count</span>)<span class="operator">+</span>str (<span class="variable">@sum</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="3-4-8-WAITFOR语句"><a href="#3-4-8-WAITFOR语句" class="headerlink" title="3.4.8 WAITFOR语句"></a>3.4.8 WAITFOR语句</h5><ul>
+<li>格式:<code>WAITFOR &#123;DELAY&#39;时间|TIME&#39;时间’&#125;</code></li>
+<li>功能:用于暂时停止SQL语句、语句块或者存储过程等的执行，直到所设定的时间已过或者所设定的时间已到才继续执行。</li>
+<li>说明:<ul>
+<li>DELAY:使用该关键字表示其后的时间应为时间间隔，该时间间隔最长可达24小时.</li>
+<li>TIME:使用该关键字表示其后的时间用于指示要等待到的时间点，格式为: <code>hh: mm: ss</code>。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>【例】在一分钟以后打印“HELLO”,代码如下:</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">WAIT <span class="keyword">FOR</span> DELAY <span class="string">&#x27;00:01&#x27;</span> PRINT <span class="string">&#x27;HELLO&#x27;</span></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>【例】在晚上10:20时打印“HELLO”。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">WAIT <span class="keyword">FOR</span> <span class="type">TIME</span> <span class="string">&#x27;22:20&#x27;</span> PRINT <span class="string">&#x27;HELLO&#x27;</span></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(5%E8%8A%82)/">http://example.com/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(5%E8%8A%82)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/"># 数据库原理与应用</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8%EF%BC%88%E5%A4%8D%E4%B9%A0%EF%BC%89/">数据库原理与应用（复习）</a>
+            
+            
+            <a class="next" rel="next" href="/2022/06/20/%E7%AC%AC%E4%B8%80%E7%AF%87Hexo-Blog%E6%96%87%E7%AB%A0/">第一篇Hexo Blog文章</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
