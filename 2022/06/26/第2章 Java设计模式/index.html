@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Jerry Wei">
+
+
+
+
+
+<title>【JavaEE】第2章 Java设计模式 | JerryWei&#39;s Web</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Jerry&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Jerry&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【JavaEE】第2章 Java设计模式</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Jerry Wei</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 26, 2022&nbsp;&nbsp;13:23:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/JavaEE%E5%B0%8F%E7%99%BD%E4%B9%8B%E8%B7%AF/">JavaEE小白之路</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="第2章-Java设计模式"><a href="#第2章-Java设计模式" class="headerlink" title="第2章 Java设计模式"></a>第2章 Java设计模式</h1><blockquote>
+<p>引用连接：<a><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/366352926?utm_source=wechat_session&utm_medium=social&utm_oi=1518634309540225024&utm_campaign=shareopn">读懂框架设计的灵魂—Java反射机制 - 知乎 (zhihu.com)</a></a></p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_62933942/article/details/123186596">动态代理(JDK动态代理)初步详解_Amour_Hash的CSDN博客</a></p>
+</blockquote>
+<h2 id="2-1-Java-反射技术"><a href="#2-1-Java-反射技术" class="headerlink" title="2.1 Java 反射技术"></a>2.1 Java 反射技术</h2><p>反射的概念：将<strong>类的各个组成部分封装为其他对象</strong>，这就是<strong>反射机制</strong>。好处:</p>
+<ol>
+<li>可以在程序运行过程中，操作这些对象。</li>
+<li>可以解耦，提高程序的可扩展性。</li>
+</ol>
+<p>Java的反射技术能够配置：类的全限定名、方法与参数，完成对象的初始化，甚至是反射某些方法。这样可以大大增强Java的可配置性。</p>
+<p>本章主要讲解对象构建和方法的反射调用。在Java中，反射通过包<code>java.lang.reflect.*</code>来实现</p>
+<h3 id="2-1-1-反射的功能"><a href="#2-1-1-反射的功能" class="headerlink" title="2.1.1 反射的功能"></a>2.1.1 反射的功能</h3><p>Java的反射拥有以下四大功能：</p>
+<ul>
+<li>在运行时（动态编译）获知<strong>任意一个对象所属的类</strong>。</li>
+<li>在运行时<strong>构造任意一个类的对象</strong>。</li>
+<li>在运行时<strong>获知任意一个类所具有的成员变量和方法</strong>。</li>
+<li>在运行时<strong>调用任意一个对象的方法和属性</strong>。</li>
+</ul>
+<p>上述这种<strong>动态获取信息、动态调用对象的方法</strong>的功能称为 Java 语言的反射机制。</p>
+<h3 id="2-1-2-理解Class类"><a href="#2-1-2-理解Class类" class="headerlink" title="2.1.2 理解Class类"></a>2.1.2 理解Class类</h3><p>运行期间，JVM始终为所有的对象维护一个被称为<strong>运行时的类型标识</strong>，用于跟踪每个对象所属类的完整结构信息（包名、类名、接口、方法和字段等等）。可以通过专门的Java类访问信息，这个类就是Class类。Class类理解为类的类型，一个Class对象成为类的类型对象。<strong>一个<code>Class</code>对象对应一个加载到JVM中的一个.Class文件</strong>。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-f110e0a6180ad3dab06f242fbd4c3112_1440w.png" alt="img"></p>
+<p>通常情况下，是先有类才有对象，我们可以把这个通常情况称为“正”，而反射中的“反”可以理解为根据对象找到对象所属的类（对象的出处）</p>
+<p>下面以代码为例：</p>
+<p>类的正常加载过程为：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-baffd6a76821a987eda3b09f2264d762_1440w.jpg" alt="img"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Date; <span class="comment">// 先有类</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Date</span> <span class="variable">date</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>(); <span class="comment">// 后有对象</span></span><br><span class="line">        System.out.println(date);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在JVM对.class字节码文件进行编译与加载时，<strong>会同时创建一个<code>Date</code>类的<code>Class</code>对象存到堆中</strong></p>
+<blockquote>
+<p>注意：不是new出来的对象，而是类的类型对象。</p>
+</blockquote>
+<p>JVM在创建Date对象前，会先检查类是否加载，寻找<strong>类</strong>对应的<strong>Class对象</strong>，若加载好则为其分配内存，然后再进行初始化<code>new Date()</code>。</p>
+<blockquote>
+<p>注意：<strong>每个类只有一个<code>Class</code>对象</strong>，若有第二条<code>new Date()</code>语句，JVM 不会再生成一个<code>Date</code>的<code>Class</code>对象。</p>
+</blockquote>
+<p>在加载完一个类后，<strong>堆内存</strong>的<strong>方法区</strong>产生了一个<code>Class</code>对象，这个对象包含了<strong>完整的类的结构信息</strong>，我们可以通过这个<code>Class</code>对象看到类的结构。好比镜子，我们就简称为：<strong>反射</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Date</span> <span class="variable">date</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">System.out.println(date.getClass()); <span class="comment">// &quot;class java.util.Date&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过反射，即调用了<code>getClass()</code>方法后，我们就获得了Date类对应的Class对象，看到了Date类的结构，输出了Date对象所属的类的完整名称，找到了对象的出处。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-e4a263c5ab52079735f0a1363306a62d_1440w.jpg" alt="img"></p>
+<h3 id="2-1-3-获取Class类对象的四种方式"><a href="#2-1-3-获取Class类对象的四种方式" class="headerlink" title="2.1.3 获取Class类对象的四种方式"></a>2.1.3 获取Class类对象的四种方式</h3><p>从 <code>Class</code> 类的源码可以看出，它的构造函数是私有的，也就是说只有 JVM 可以创建 <code>Class</code> 类的对象，我们不能像普通类一样直接 new 一个 <code>Class</code> 对象。</p>
+<h4 id="一、知道具体类的情况下使用"><a href="#一、知道具体类的情况下使用" class="headerlink" title="一、知道具体类的情况下使用"></a>一、知道具体类的情况下使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">albunbarClass</span> <span class="operator">=</span> TargetObject.class;</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、通过Class-forName-传入全类名获取"><a href="#二、通过Class-forName-传入全类名获取" class="headerlink" title="二、通过Class.forName()传入全类名获取"></a>二、通过<code>Class.forName()</code>传入全类名获取</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">alunbarClass1</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;com.xxx.TargetObject&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>方法内部实际上调用的是<code>forName0</code>:</p>
+<p><img src="https://pic2.zhimg.com/80/v2-a12f1709582b30e930cb39e41f885af9_1440w.jpg" alt="img"></p>
+<p>第 2 个 <code>boolean</code> 参数表示类是否需要初始化，默认是需要初始化。一旦初始化，就会触发目标对象的 <code>static</code> 块代码执行，<code>static</code> 参数也会被再次初始化。</p>
+<h4 id="三、通过对象实例instance-getClass-获取"><a href="#三、通过对象实例instance-getClass-获取" class="headerlink" title="三、通过对象实例instance.getClass()获取"></a>三、通过对象实例<code>instance.getClass()</code>获取</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Date</span> <span class="variable">date</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line"><span class="type">Class</span> <span class="variable">albunbarClass2</span> <span class="operator">=</span> date.getClass(); </span><br><span class="line"><span class="comment">//通过该对象实例的Class类对象</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="四、通过类加载器xxxClassLoader-loadClass-传入类路径获取"><a href="#四、通过类加载器xxxClassLoader-loadClass-传入类路径获取" class="headerlink" title="四、通过类加载器xxxClassLoader.loadClass()传入类路径获取"></a>四、通过类加载器<code>xxxClassLoader.loadClass()</code>传入类路径获取</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">clazz</span> = ClassLoader.LoadClass(<span class="string">&quot;com.xxx.TargetObject&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><u><em>注意：通过类加载器获取 Class 对象不会进行初始化</em></u></p>
+</blockquote>
+<h3 id="2-1-4-通过反射来构造类的实例"><a href="#2-1-4-通过反射来构造类的实例" class="headerlink" title="2.1.4 通过反射来构造类的实例"></a>2.1.4 通过反射来构造类的实例</h3><h4 id="一、使用Class-newInstance"><a href="#一、使用Class-newInstance" class="headerlink" title="一、使用Class.newInstance"></a>一、使用<code>Class.newInstance</code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Date</span> <span class="variable">date1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line"><span class="type">Class</span> <span class="variable">alunbarClass2</span> <span class="operator">=</span> date1.getClass();</span><br><span class="line"><span class="type">Date</span> <span class="variable">date2</span> <span class="operator">=</span> alunbarClass2.newInstance();</span><br><span class="line"><span class="comment">//创建一个与 alunbarClass2 具有相同类型的实例</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="二、通过反射先获取构造方法再调用"><a href="#二、通过反射先获取构造方法再调用" class="headerlink" title="二、通过反射先获取构造方法再调用"></a>二、通过反射先获取构造方法再调用</h4><p>因为不是所有的类都是无参构造、或者类构造器是private的。在这种情况下，若我们想通过反射来实例化对象，<code>Class.newInstance</code>是无法满足的。</p>
+<p>此时，我们可以使用<code>Constructor</code>的<code>newInstance</code>方法来实现，先获取构造函数，再执行构造函数。<code>Constructor</code>的<code>newInstance()</code>是可携带参数的。而<code>Class.newInstance</code>是无参的。</p>
+<h5 id="深入了解Construct-执行构造函数的方法"><a href="#深入了解Construct-执行构造函数的方法" class="headerlink" title="深入了解Construct - 执行构造函数的方法"></a>深入了解Construct - 执行构造函数的方法</h5><p><strong>批量获取构造函数：</strong></p>
+<ol>
+<li><p>获取所有”公有的“构造方法</p>
+<p><code>public Constructor[] getConstructors()&#123; &#125;</code></p>
+</li>
+<li><p>获取所有的构造方法（包括私有、受保护、默认、公有）</p>
+<p><code>public Constructor[] getDeclaredConstructors()&#123; &#125;</code></p>
+</li>
+</ol>
+<p><strong>单个获取构造函数：</strong></p>
+<ol>
+<li><p>获取一个制定参数类型的“公有的“构造方法</p>
+<p><code>public Constructor[] getConstructor(Class... parameterTypes)&#123; &#125;</code></p>
+</li>
+<li><p>获取一个制定参数类型的“构造方法”，可以是私有的、受保护的、默认的或公有的。</p>
+<p><code>public Constructor getDeclaredConstructor(Class... parameterTypes)&#123; &#125;</code></p>
+</li>
+</ol>
+<blockquote>
+<p>实例演示</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> fanshe;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">	Student(String str)&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;默认的构造方法 s = &quot;</span>+str);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">Student</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;调用了公有、无参构造方法&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(<span class="type">char</span> name)</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;姓名：&quot;</span>+name);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(<span class="type">char</span> name,<span class="type">int</span> age)</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;姓名：&quot;</span>+name+<span class="string">&quot;\t&quot;</span>+<span class="string">&quot;年龄&quot;</span>+age);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">protected</span> <span class="title function_">Student</span><span class="params">(<span class="type">boolean</span> n)</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;受保护的构造方法 n = &quot;</span>+n);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> <span class="title function_">Student</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;私有的构造方法年龄：&quot;</span>+age);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> fanshe;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Constructors</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">		<span class="comment">//加载Class对象</span></span><br><span class="line">		<span class="type">Class</span> <span class="variable">clazz</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;fanshe.Student&quot;</span>);</span><br><span class="line">        </span><br><span class="line">		<span class="comment">//获取所有公有的构造方法</span></span><br><span class="line">		Constructor[] conArray = clazz.getConstructors();</span><br><span class="line">		System.out.println(<span class="string">&quot;获取所有公有的构造方法&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(Constructor c : conArray) &#123;</span><br><span class="line">			System.out.println(c);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//获取所有的构造方法</span></span><br><span class="line">		conArray = clazz.getDeclaredConstructors();</span><br><span class="line">		System.out.println(<span class="string">&quot;获取所有构造方法&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(Constructor c : conArray) &#123;</span><br><span class="line">			System.out.println(c);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//获取公有、无参的构造方法</span></span><br><span class="line">		<span class="comment">//因为是无参的构造方法所以类型时一个null，不写也可以</span></span><br><span class="line">		<span class="comment">//这里需要的是一个参数的类型，切记：是类型！</span></span><br><span class="line">		<span class="comment">//返回描述这个无参构造函数的类对象</span></span><br><span class="line">		<span class="type">Constructor</span> <span class="variable">con</span> <span class="operator">=</span> clazz.getConstructor(<span class="literal">null</span>);</span><br><span class="line">		System.out.println(<span class="string">&quot;获取所有公有、无参的构造方法&quot;</span>);</span><br><span class="line">		<span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> con.newInstance();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//获取私有构造方法</span></span><br><span class="line">		con = clazz.getDeclaredConstructor(<span class="type">int</span>.class);</span><br><span class="line">		System.out.println(<span class="string">&quot;获取所有私有的构造方法&quot;</span>);</span><br><span class="line">		System.out.println(con);</span><br><span class="line">		con.setAccessible(<span class="literal">true</span>); <span class="comment">// 为了调用private 方法/域 我们需要取消安全检查</span></span><br><span class="line">		obj = con.newInstance(<span class="number">12</span>); <span class="comment">// 调用构造方法</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<p><img src="/./images/image-20220623142658670.png" alt="image-20220623142658670"></p>
+<h4 id="三、使用开源库-Objenesis"><a href="#三、使用开源库-Objenesis" class="headerlink" title="三、使用开源库 Objenesis"></a>三、使用开源库 Objenesis</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在无参构造函数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> i;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Test</span><span class="params">(<span class="type">int</span> i)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.i = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;test...&quot;</span> + i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">------------------------</span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Objenesis</span> <span class="variable">objenesis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjenesisStd</span>(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">Test</span> <span class="variable">test</span> <span class="operator">=</span> objenesis.newInstance(Test.class);</span><br><span class="line">        test.show();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-1-5-通过反射获取成员变量并使用"><a href="#2-1-5-通过反射获取成员变量并使用" class="headerlink" title="2.1.5 通过反射获取成员变量并使用"></a>2.1.5 通过反射获取成员变量并使用</h3><p>获取变量分为获取成员变量与单个获取。返回值通过Field类型来接受。</p>
+<h4 id="一、批量获取"><a href="#一、批量获取" class="headerlink" title="一、批量获取"></a>一、批量获取</h4><ol>
+<li><p>获取所有公有的字段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Field[] getFields()&#123;	&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取所有的字段（包括私有、受保护、默认的）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public Field[] getDeclaredFields()&#123; &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="二、获取所有的字段"><a href="#二、获取所有的字段" class="headerlink" title="二、获取所有的字段"></a>二、获取所有的字段</h4><ol>
+<li><p>获取一个指定名称的公有的字段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Field <span class="title function_">getField</span><span class="params">(String name)</span>&#123; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取一个指定点名称的字段，可以是私有、受保护、默认的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Field <span class="title function_">getDeclareField</span><span class="params">(String name)</span>&#123; &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="三、修改字段的set方法"><a href="#三、修改字段的set方法" class="headerlink" title="三、修改字段的set方法"></a>三、修改字段的set方法</h4><p>set 方法包括两个参数：</p>
+<ul>
+<li>obj：哪个对象要修改这个成员变量</li>
+<li>value：要修改成哪个值</li>
+</ul>
+<h3 id="2-1-6-通过反射获取成员方法并调用"><a href="#2-1-6-通过反射获取成员方法并调用" class="headerlink" title="2.1.6 通过反射获取成员方法并调用"></a>2.1.6 通过反射获取成员方法并调用</h3><h4 id="一、批量获取-1"><a href="#一、批量获取-1" class="headerlink" title="一、批量获取"></a>一、批量获取</h4><ol>
+<li><p>获取所有“公共方法”（包括父类的方法，当然也包括Object类）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Method[] getMethods()&#123; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取所有的成员方法，包括私有的（不包括继承的）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Method[] getDeclaredMethods()&#123; &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="二、单个获取"><a href="#二、单个获取" class="headerlink" title="二、单个获取"></a>二、单个获取</h4><p>获取一个制定方法名和参数类型的成员方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Method <span class="title function_">getMethod</span><span class="params">(String name,Class&lt;?&gt;...prameterTypes)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="三、调用方法"><a href="#三、调用方法" class="headerlink" title="三、调用方法"></a>三、调用方法</h4><p><code>invoke</code> 方法中包含两个参数：</p>
+<ul>
+<li>obj：哪个对象要来调用这个方法</li>
+<li>args：调用方法时所传递的实参</li>
+</ul>
+<h3 id="2-1-7-反射机制的优缺点"><a href="#2-1-7-反射机制的优缺点" class="headerlink" title="2.1.7 反射机制的优缺点"></a>2.1.7 反射机制的优缺点</h3><p>优点：比较灵活，能够在运行时动态获取类的实例。</p>
+<p><strong>缺点</strong>：</p>
+<p>1）性能瓶颈：反射相当于一系列解释操作，通知 JVM 要做的事情，性能比直接的 Java 代码要慢很多。</p>
+<p>2）安全问题：反射机制破坏了封装性，因为通过反射可以获取并调用类的私有方法和字段。</p>
+<h3 id="2-1-8-反射的经典应用场景"><a href="#2-1-8-反射的经典应用场景" class="headerlink" title="2.1.8. 反射的经典应用场景"></a>2.1.8. 反射的经典应用场景</h3><p>反射在我们实际编程中其实并不会直接大量的使用，但是实际上有很多设计都与反射机制有关，比如：</p>
+<ul>
+<li>动态代理机制</li>
+<li>使用 JDBC 连接数据库</li>
+<li>Spring &#x2F; Hibernate 框架（实际上是因为使用了动态代理，所以才和反射机制有关）</li>
+</ul>
+<h2 id="2-2-动态代理模式和责任链模式"><a href="#2-2-动态代理模式和责任链模式" class="headerlink" title="2.2 动态代理模式和责任链模式"></a>2.2 动态代理模式和责任链模式</h2><p><strong>代理</strong>：两个类之间有一个类完成两个类之间的桥接功能，之间这一个类就是代理类</p>
+<p><strong>动态代理的意义</strong>：在于生成一个<strong>占位</strong>（又称<strong>代理对象</strong>），来代理真实的对象，从而<strong>控制真实对象的访问</strong>。</p>
+<img src="./images/image-20220624173828224.png" alt="image-20220624173828224" style="zoom:50%;" />
+
+<p><strong>动态代理的作用</strong>：在真实对象访问之前或之后加入相应的逻辑，或者根据其他规则控制是否使用真实对象。</p>
+<p><strong>代理机制特性</strong>：<strong>1.目标类和调用类之间非直接性关联 2.功能增强 3.控制访问</strong></p>
+<ol>
+<li><p><strong>非直接性关联</strong>：中间有代理类对象</p>
+</li>
+<li><p><strong>功能增强</strong>：使用代理类对象实现功能增强</p>
+</li>
+<li><p><strong>控制访问</strong>：调用类对象不能访问到目标类对象，必须通过代理类对象</p>
+</li>
+</ol>
+<p><strong>动态代理的步骤</strong>：我们需要在调用者调用对象之前产生一个代理对象，而这个代理对象需要和真实对象建立起代理关系，所以代理需要分为两个步骤：</p>
+<ul>
+<li>代理对象和真实对象建立代理关系</li>
+<li>实现代理对象的代理逻辑方法</li>
+</ul>
+<p><strong>动态代理的分类</strong>：</p>
+<p>（1）<strong>JDK动态代理</strong>：JDK使用反射机制创建代理类对象，JDK具有创建对象的能力（本章）</p>
+<p>（2）<strong>CGLIB动态代理</strong>：利用面向对象三大特性继承的关系，完成代理操作</p>
+<p><strong>动态代理和静态代理的区别</strong>：</p>
+<p> （1）创建代理类对象的操作者：</p>
+<p>​			静态代理：程序员自身      </p>
+<p>​			动态代理：JDK</p>
+<p> （2）创建代理类对象的时机：</p>
+<p>​			静态代理：在编译阶段（源代码级别） </p>
+<p>​			动态代理：运行阶段</p>
+<p>  （静态代理的代理类在源代码的时候有程序员手动编写，而动态代理是在程序运行到哪个代码块动态判断是否需要代理类对象来完成代理）</p>
+<h3 id="2-2-1-JDK动态代理"><a href="#2-2-1-JDK动态代理" class="headerlink" title="2.2.1 JDK动态代理"></a>2.2.1 JDK动态代理</h3><p>JDK动态代理必须借助一个接口才能产生代理对象，所以先定义接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">HelloWorld</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sayHelloWorld</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后提供实现类来实现接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldImpl</span> <span class="keyword">implements</span> <span class="title class_">HelloWorld</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sayHelloWorld</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>先要建立起<strong>代理对象与真实服务对象的关系</strong>，然后实现<strong>代理逻辑</strong>。在JDK的动态代理中，要实现代理逻辑类必须实现<code>java.lang.reflect.InvocationHandler</code>接口，里面定义了一个invoke方法，并提供接口数组用于下挂代理对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JdkProxyExample</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">	<span class="comment">//真实对象</span></span><br><span class="line">	<span class="keyword">private</span> Object target=<span class="literal">null</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 建立代理对象与真实对象的代理关系，并返回代理对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> target 真实对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 代理对象</span></span><br><span class="line"><span class="comment">	 * **/</span></span><br><span class="line">	<span class="keyword">public</span> Object <span class="title function_">bind</span><span class="params">(Object target)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.target = target;</span><br><span class="line">		<span class="keyword">return</span> Proxy.newProxyInstance(target.getClass().getClassLoader(),target.getClass().getInterfaces(),<span class="built_in">this</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 代理方法逻辑</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> proxy 代理对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> method 当前调度方法</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> args 当前方法参数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 代理结果返回</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Throwable 异常</span></span><br><span class="line"><span class="comment">	 * **/</span></span><br><span class="line">	<span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy,Method method,Object[] args)</span><span class="keyword">throws</span> Throwable&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;进入代理逻辑方法&quot;</span>);</span><br><span class="line">		System.out.println(<span class="string">&quot;在调度真实对象之前的服务&quot;</span>);</span><br><span class="line">		<span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> method.invoke(target, args);	<span class="comment">//相当于调用sayHelloWorld方法</span></span><br><span class="line">		System.out.println(<span class="string">&quot;在调度真实对象之后的服务&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> obj;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>第一步：建立代理对象和真实对象的关系</strong></p>
+<ul>
+<li><p>这里是使用了bind方法去完成的，方法里首先用类的属性target保存了真实的对象，然后通过如下代码建立生成了代理对象。</p>
+</li>
+<li><p>&#96;&#96;&#96;<br>Proxy.newProxyInstance(target.getClass().getClassLoader(),target.getClass().getInterfaces(),this);</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  + 其中newProxyInstance方法中包含了3个参数。</span><br><span class="line"></span><br><span class="line">    + 第一个是**类加载器**，我们采用了target本身的类加载器</span><br><span class="line">    + 第二个是**把生成的动态代理对象下挂在所实现的接口下**，这个写法就是放在target实现的接口下。</span><br><span class="line">    + 第三个是**实现方法逻辑的代理类**，this表示当前对象，他必须实现InvocationHandler接口的invoke方法，它就是实现逻辑方法的现实方法。</span><br><span class="line"></span><br><span class="line">+ **第二步：实现代理逻辑方法**</span><br><span class="line"></span><br><span class="line">  + **invoke**方法可以实现逻辑代理，3个参数含义如下所示</span><br><span class="line"></span><br><span class="line">    + proxy，代理对象，就是bind方法生成的对象。</span><br><span class="line">    + method，当前调度的方法</span><br><span class="line">    + args，调度方法的参数</span><br><span class="line"></span><br><span class="line">  + 当我们使用代理对象调度方法以后，他就会进入invoke方法里面。</span><br><span class="line"></span><br><span class="line">    `Object obj = method.invoke(target, args);`</span><br><span class="line"></span><br><span class="line">&gt; Proxy相当于商务对象，target相对于软件工程师对象，bind方法就是建立商务和软件工程师代理关系到方法，而invoke就是商务逻辑，它将控制软件工程师的访问。</span><br><span class="line"></span><br><span class="line">测试JDK动态代理：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">public class testJdkProxy &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		JdkProxyExample jdk = new JdkProxyExample();</span><br><span class="line">		//绑定关系，因为挂在接口HelloWorld下，所以声明代理对象HelloWorld proxy</span><br><span class="line">		HelloWorld proxy = (HelloWorld)jdk.bind(new HelloWorldImpl());</span><br><span class="line">		//此时的HelloWorld对象已经是一个代理对象，它会进入代理的逻辑方法invoke里</span><br><span class="line">		proxy.sayHelloWorld();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>结果如下：</p>
+<blockquote>
+<p>进入代理逻辑方法<br>在调度真实对象之前的服务<br>Hello World<br>在调度真实对象之后的服务</p>
+</blockquote>
+<h3 id="2-2-2-CGLIB动态代理"><a href="#2-2-2-CGLIB动态代理" class="headerlink" title="2.2.2 CGLIB动态代理"></a>2.2.2 CGLIB动态代理</h3><p>JDK动态代理必须提供接口才能使用，而CGLIB动态代理的优势就是不需要提供接口，只要一个非抽象类就能实现动态代理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CglibProxyExample</span> <span class="keyword">implements</span> <span class="title class_">MethodInterceptor</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 生成CGLIB代理对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> cls —— Class类</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> Class类的CGLIB代理对象</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> Object <span class="title function_">getProxy</span><span class="params">(Class cls)</span> &#123;</span><br><span class="line">		<span class="type">Enhancer</span> <span class="variable">enhancer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Enhancer</span>();	<span class="comment">//CGLIB enhancer增强类对象</span></span><br><span class="line">		enhancer.setSuperClass(cls);		<span class="comment">//设置增强类型</span></span><br><span class="line">		enhancer.setCallback(<span class="built_in">this</span>);			<span class="comment">//定义代理逻辑对象为当前对象，要求当前对象实现MethodInterceptor方法</span></span><br><span class="line">		<span class="keyword">return</span> enhancer.create();			<span class="comment">//生成并返回</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 代理逻辑对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> proxy 代理对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> method 方法</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> args 方法参数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> methodProxy 方法代理</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 代理逻辑返回</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Throwable异常</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> Object <span class="title function_">intercept</span> <span class="params">(Object proxy,Method method,Object[] args,MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable)&#123;</span><br><span class="line">		System.err.println(<span class="string">&quot;调用真实对象前&quot;</span>);</span><br><span class="line">		<span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> methodProxy.invokeSuper(proxy,args);</span><br><span class="line">		System.err.println(<span class="string">&quot;调用真实对象后&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里用了<code>CGLIB</code>的加强者Enhancer，通过设置超类的方法，然后通过<code>setCallback</code>方法设置哪个类为它的代理类。其中，参数为this就意味着是当前对象，那就要求用this这个对象实现接口<code>MethodInterceptor</code>的方法——intercept，然后返回代理对象。</p>
+<p>测试CGLIB动态代理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">tesCGLIBProxy</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="type">CglibProxyExample</span> <span class="variable">cpe</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CglibProxyExample</span>();</span><br><span class="line">		<span class="type">ReflectServiceImpl</span> <span class="variable">obj</span> <span class="operator">=</span> (ReflectServiceImpl)cpe.getProxy(ReflectServiceImpl.class);</span><br><span class="line">		obj.sayHello(<span class="string">&quot;张三&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<blockquote>
+<p>调用真实对象前</p>
+<p>Hello 张三</p>
+<p>调用真实对象后</p>
+</blockquote>
+<p>JDK、CGLIB两者都是用getProxy方法生成了代理对象，制定了代理的逻辑类。而代理逻辑类要实现一个接口的一个方法，那么这个接口定义的方法就是代理对象的逻辑方法，它可以控制真实对象的方法。</p>
+<h3 id="2-2-3-拦截器"><a href="#2-2-3-拦截器" class="headerlink" title="2.2.3 拦截器"></a>2.2.3 拦截器</h3><p>由于动态代理太难理解，程序设计者会设计一个拦截器供开发者使用，开发者只要知道拦截器接口的方法、含义和作用即可，无需知道动态代理是怎么实现的。用JDK动态代理来实现一个拦截器的逻辑。</p>
+<p>定义拦截器接口Interceptor：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Interceptor</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">before</span><span class="params">(Object proxy,Object target,Method method,Object[] args)</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">around</span><span class="params">(Object proxy,Object target,Method method,Object[] args)</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">after</span><span class="params">(Object proxy,Object target,Method method,Object[] args)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义了3个方法：before、around、after方法</p>
+<ul>
+<li>3个方法的参数为：proxy代理对象、target真实对象、method方法、arg运行方法参数</li>
+<li>before方法返回boolean值，它在真实对象前调用。当返回为true值时，则反射真实对象的方法，反之则调用around方法</li>
+<li>在反射真实对象方法或者around方法执行之后，调用after方法。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyInterceptor</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">before</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span> &#123;</span><br><span class="line">		System.err.println(<span class="string">&quot;反射方法前逻辑&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">around</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span> &#123;</span><br><span class="line">		System.err.println(<span class="string">&quot;取代了被代理对象的方法&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">after</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span> &#123;</span><br><span class="line">		System.err.println(<span class="string">&quot;反射方法后逻辑&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现类MyInterceptor，它实现了所有的Interceotor接口方法，使用JDK动态代理，就可以去实现这些方法在适当时的调用逻辑了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InterceptorJdkProxy</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> Object target; <span class="comment">//真实对象</span></span><br><span class="line">	<span class="keyword">private</span> <span class="type">String</span> <span class="variable">interceptorClass</span> <span class="operator">=</span> <span class="literal">null</span>; <span class="comment">//拦截器全限定名</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">InterceptorJdkProxy</span><span class="params">(Object target,String interceptorClass)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.target = target;</span><br><span class="line">		<span class="built_in">this</span>.interceptorClass = interceptorClass;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 绑定一个委托对象并返回一个【代理占位】</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> target 真实对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> interceptorClass 代理对象【占位】</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">bind</span><span class="params">(Object target,String interceptorClass)</span> &#123;</span><br><span class="line">		<span class="comment">//取得代理对象</span></span><br><span class="line">		<span class="keyword">return</span> Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), <span class="keyword">new</span> <span class="title class_">InterceptorJdkProxy</span>(target,interceptorClass));</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> proxy</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">		<span class="keyword">if</span>(interceptorClass == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> method.invoke(target,args);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">		<span class="type">Interceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> (Interceptor)Class.forName(interceptorClass).newInstance();</span><br><span class="line">		<span class="keyword">if</span>(interceptor.before(proxy, target, method, args)) &#123;</span><br><span class="line">			result = method.invoke(target, args);</span><br><span class="line">		&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">			interceptor.around(proxy, args, method, args);</span><br><span class="line">		&#125;</span><br><span class="line">		interceptor.after(proxy, args, method, args);</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有两个属性，一个是target，它是真实对象；另一个是字符串interceptorClass，它是一个拦截器的全限定名。以下为这段代码的解释步骤：</p>
+<ol>
+<li>在bind方法中，用JDK动态代理绑定了一个对象，然后返回代理对象</li>
+<li>如果没有设置拦截器，则直接反射真实对象的方法，然后结束，否则进行第3步</li>
+<li>通过反射生成拦截器，并准备使用它。</li>
+<li>调用拦截器的before方法，如果返回为true，反射原来的方法；否则运行拦截器的around方法</li>
+<li>调用拦截器的after方法</li>
+<li>返回结果</li>
+</ol>
+<p>工作流程如下所示：</p>
+<p><img src="/./images/image-20220626085235093.png" alt="image-20220626085235093"></p>
+<ul>
+<li>开发者只要知道拦截器的作用就可以编写拦截器了，编写完后可以设置拦截器，这样就完成了任务，所以对于开发者而言相对简单了。</li>
+<li>设计者可能是精通Java的开发人员，他来完成动态代理的逻辑。</li>
+<li>设计者只会把拦截器接口暴露给开发者使用，让动态代理的逻辑在开发者的视野中“消失”。</li>
+</ul>
+<p>拦截器可以进一步简化动态代理的使用方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyInterceptor</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">before</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span> &#123;</span><br><span class="line">		System.err.println(<span class="string">&quot;反射方法前逻辑&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">around</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span> &#123;</span><br><span class="line">		System.err.println(<span class="string">&quot;取代了被代理对象的方法&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">after</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span> &#123;</span><br><span class="line">		System.err.println(<span class="string">&quot;反射方法后逻辑&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-4-责任链模式"><a href="#2-2-4-责任链模式" class="headerlink" title="2.2.4 责任链模式"></a>2.2.4 责任链模式</h3><p>设计者往往会用拦截器去代替动态代理，然后将拦截器的接口提供给开发者，从而简化开发者的开发难度，但是拦截器有多个。<u>当<strong>一个对象</strong>在<strong>一条链上</strong>被<strong>多个拦截器拦截处理</strong>时（拦截器也可以选择不拦截处理），我们把这样的设计模式叫做<strong>责任链模式</strong></u>，它用于一个对象在多个角色中传递的场景。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**************************拦截器1***********************/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Interceptor1</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">before</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;【拦截器1】的before方法&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">around</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">after</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;【拦截器1】的after方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**************************拦截器2***********************/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Interceptor2</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">before</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;【拦截器2】的before方法&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">around</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">after</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;【拦截器2】的after方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**************************拦截器3***********************/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Interceptor3</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">before</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;【拦截器3】的before方法&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">around</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">after</span><span class="params">(Object proxy, Object target, Method method, Object[] args)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;【拦截器3】的after方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>延续使用拦截器中的InterceptorJdkProxy类，测试代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InterceptorJdkProxy</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Object target;      <span class="comment">//真实对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">interceptorClass</span> <span class="operator">=</span> <span class="literal">null</span>;     <span class="comment">//拦截器全限定名</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">InterceptorJdkProxy</span><span class="params">(Object target ,String interceptorClass)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.target = target;</span><br><span class="line">        <span class="built_in">this</span>.interceptorClass = interceptorClass;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">bind</span><span class="params">(Object target ,String interceptorClass)</span>&#123;</span><br><span class="line">        <span class="comment">//取得代理对象</span></span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(),<span class="keyword">new</span> <span class="title class_">InterceptorJdkProxy</span>(target,interceptorClass));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 通过代理对象调用方法，首先进入这个方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> proxy 调用对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> method 方法，被调用方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> args 方法的参数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        <span class="keyword">if</span>(interceptorClass == <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> method.invoke(target,args);  <span class="comment">//没有设置拦截器则直接返回原方法</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="comment">//通过反射生成拦截器</span></span><br><span class="line">        <span class="type">Interceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> (Interceptor) Class.forName(interceptorClass).newInstance();</span><br><span class="line">        <span class="comment">//调用前置方法</span></span><br><span class="line">        <span class="keyword">if</span>(interceptor.before(proxy,target,method,args))&#123;</span><br><span class="line">            result = method.invoke(target,args);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;<span class="comment">//返回false执行around方法</span></span><br><span class="line">            interceptor.around(proxy,target,method,args);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//调用后置方法</span></span><br><span class="line">        interceptor.after(proxy,target,method,args);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        <span class="type">HelloWorld</span> <span class="variable">proxy1</span> <span class="operator">=</span> (HelloWorld) InterceptorJdkProxy.bind(<span class="keyword">new</span> <span class="title class_">HelloWorldImpl</span>(),<span class="string">&quot;com.inceptors.Interceptor1&quot;</span>);</span><br><span class="line">        <span class="type">HelloWorld</span> <span class="variable">proxy2</span> <span class="operator">=</span> (HelloWorld) InterceptorJdkProxy.bind(proxy1,<span class="string">&quot;com.inceptors.Interceptor2&quot;</span>);</span><br><span class="line">        <span class="type">HelloWorld</span> <span class="variable">proxy3</span> <span class="operator">=</span> (HelloWorld) InterceptorJdkProxy.bind(proxy2,<span class="string">&quot;com.inceptors.Interceptor3&quot;</span>);</span><br><span class="line">        proxy3.sayHelloWorld();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="2-3-观察者（Observer）模式"><a href="#2-3-观察者（Observer）模式" class="headerlink" title="2.3 观察者（Observer）模式"></a>2.3 观察者（Observer）模式</h2><p><strong>观察者模式</strong>又称为<strong>发布订阅模式</strong>，是<strong>对象的行为模式</strong>。</p>
+<p>观察者模式定义了一种<strong>一对多的依赖关系</strong>，让多个观察者对象同时监视着被观察者的状态，当被观察者的状态发生变化时，会通知所有观察者，并让其自动更新自己。</p>
+<h3 id="2-3-1-概述"><a href="#2-3-1-概述" class="headerlink" title="2.3.1 概述"></a>2.3.1 概述</h3><p>观察者模式更易于扩展，责任也更加清晰。</p>
+<blockquote>
+<p>例如，把每一个电商接口看做一个【观察者】，每一个【观察者】都能观察到产品列表（【被监听对象】）。当公司发布新产品时，就会发送到这个产品列表上，于是产品列表（【被监听对象】）就发生了变化，这样就可以触发到各个电商的接口（【观察者】）发送新产品到对应的合作电商那里。</p>
+</blockquote>
+<blockquote>
+<img src="./images/image-20220626105449141.png" alt="image-20220626105449141" style="zoom: 25%;" />
+</blockquote>
+<p>类似这样，一个对象会去监听另一个对象，当被监听对象发生变化时，对象就会触发一定的行为，以适合变化的逻辑模式，我们成为观察者模式。</p>
+<p>这样的好处是，程序不再出现if语句，观察者会根据被观察对象的变化作出对应的行为，无须耦合在一起。</p>
+<h3 id="2-3-2-实例"><a href="#2-3-2-实例" class="headerlink" title="2.3.2 实例"></a>2.3.2 实例</h3><p>观察者模式要同时存在观察者和被观察者模式双方，观察者可以是多个。</p>
+<p>在Java中，需要去继承<code>java.util.Observable</code>类，先看被观察者——一个产品列表。</p>
+<blockquote>
+<p>代码清单2-19：被观察的产品列表</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductList</span> <span class="keyword">extends</span> <span class="title class_">Observable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; productList = <span class="literal">null</span>;    <span class="comment">//产品列表</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ProductList instance;        <span class="comment">//类唯一实例</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">ProductList</span><span class="params">()</span>&#123; &#125;                    <span class="comment">//构建方法实例化</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 取得唯一实例</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 产品列表唯一实例</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ProductList <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="literal">null</span>)&#123;</span><br><span class="line">            instance = <span class="keyword">new</span> <span class="title class_">ProductList</span>();</span><br><span class="line">            instance.productList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 增加观察者（电商接口）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> observer 观察者</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addProductListObserver</span><span class="params">(Observer observer)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.addObserver(observer);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 增加产品</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> newProduct 新产品</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addProduct</span><span class="params">(String newProduct)</span>&#123;</span><br><span class="line">        productList.add(newProduct);</span><br><span class="line">        System.out.println(<span class="string">&quot;产品列表新增产品：&quot;</span>+newProduct);</span><br><span class="line">        <span class="built_in">this</span>.setChanged();                          <span class="comment">//设置被观察者发生变化</span></span><br><span class="line">        <span class="built_in">this</span>.notifyObservers(newProduct);           <span class="comment">//通知观察者并传递新产品</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个类的基本内容与主要方法：</p>
+<ul>
+<li><p><strong>构建方法私有化</strong>。避免通过new的方式生成对象，而是通过<code>getInstance</code>方法来获得产品列表的单例，这里使用的是单例模式。</p>
+</li>
+<li><p><code>addProductListObserver</code>可以增加一个电商接口（观察者）</p>
+</li>
+<li><p>核心逻辑在addProduct方法上。</p>
+<p>在产品列表上增加了一个新的产品，然后调用<code>setChanged</code>方法。这个方法用于告知观察者当前被观察者发生了变化，如果没有，则无法触发其行为。最后通过<code>notifyObservers</code>告知观察者，让他们发生相应的动作，并将新产品作为参数传递给观察者。</p>
+</li>
+</ul>
+<blockquote>
+<p>代码清单2-20：京东与淘宝电商接口（观察者）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JingDongObserver</span> <span class="keyword">implements</span> <span class="title class_">Observer</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Observable o, Object product)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">newProduct</span> <span class="operator">=</span> (String) product;</span><br><span class="line">        System.err.println(<span class="string">&quot;发送新产品【&quot;</span>+newProduct+<span class="string">&quot;】同步到京东商城了唷！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TaobaoObserver</span> <span class="keyword">implements</span> <span class="title class_">Observer</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Observable o, Object product)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">newProduct</span> <span class="operator">=</span> (String) product;</span><br><span class="line">        System.err.println(<span class="string">&quot;发送新产品【&quot;</span>+newProduct+<span class="string">&quot;】同步到淘宝商城了唷！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>代码清单2-21：测试观察者模式</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ProductList</span> <span class="variable">observable</span> <span class="operator">=</span> ProductList.getInstance();</span><br><span class="line">        <span class="type">TaobaoObserver</span> <span class="variable">taobaoObserver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TaobaoObserver</span>();</span><br><span class="line">        <span class="type">JingDongObserver</span> <span class="variable">jdObserver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JingDongObserver</span>();</span><br><span class="line">        observable.addObserver(jdObserver);</span><br><span class="line">        observable.addObserver(taobaoObserver);</span><br><span class="line">        observable.addProduct(<span class="string">&quot;新增产品1&quot;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>代码结果如下</p>
+<img src="../images/image-20220626114228905.png" alt="image-20220626114228905" style="zoom: 50%;" />
+</blockquote>
+<h2 id="2-4-工厂模式和抽象工厂模式"><a href="#2-4-工厂模式和抽象工厂模式" class="headerlink" title="2.4 工厂模式和抽象工厂模式"></a>2.4 工厂模式和抽象工厂模式</h2><h3 id="2-4-1-普通工厂（Simple-Factory）模式"><a href="#2-4-1-普通工厂（Simple-Factory）模式" class="headerlink" title="2.4.1 普通工厂（Simple Factory）模式"></a>2.4.1 普通工厂（Simple Factory）模式</h3><p>例如有一个<code>Iproduct</code>的产品接口，下面有5个实现类。他们属于一个大类，可以通过一个工厂去管理他们的生成，但由于类型不同，所以初始化不同。为了方便使用产品工厂（ProductFactory）类来创建这些产品的对象，用户可以通过产品号来确定需要哪种产品。</p>
+<img src="./images/image-20220626121727291.png" alt="image-20220626121727291" style="zoom: 33%;" />
+
+<p>对于程序调用者而言，他只需要知道通过工厂的createProduct方法，指定产品编号——ProductNo可以得到对应的产品，而产品满足接口IProduct的规范，所以初始化就简单了许多。对于产品对象的创建，可以把一些特有产品规则写入工厂类中。</p>
+<p>普通工厂方法模式就是建立一个工厂类，对实现了同一接口的不同实现类进行实例的创建。</p>
+<h3 id="2-4-2-抽象工程（Abstract-Factory）模式"><a href="#2-4-2-抽象工程（Abstract-Factory）模式" class="headerlink" title="2.4.2 抽象工程（Abstract Factory）模式"></a>2.4.2 抽象工程（Abstract Factory）模式</h3><p>抽象工厂模式可以向客户端提供一个接口，使得客户端在不必指定产品的具体情况下，创建多个产品族中的产品对象。</p>
+<p>客户只是认为有一个能够生成各类车的工程，它能生产我所需要的产品，这里工厂只是一个虚拟的概念，并不真实存在，它是通过车厂内部各个分厂去实现的，这个虚拟工程被称为抽象工厂，它的各个分厂称为具体工厂。为了统一，需要制定一个接口规范（IProductFactory），所有的具体工厂和抽象工厂都要实现这个接口。</p>
+<blockquote>
+<p>IProductFactory工厂接口可设计成：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">IProductFactory</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> IProduct <span class="title function_">createProduct</span><span class="params">(String productNo)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>createProduct方法（工厂的具体实现方法）的伪代码：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductFactory1</span> <span class="keyword">implements</span> <span class="title class_">IProductFactory</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> IProduct <span class="title function_">createProduct</span><span class="params">(String productNo)</span>&#123;</span><br><span class="line">		<span class="type">IProduct</span> <span class="variable">product</span> <span class="operator">=</span> xxx; <span class="comment">//工厂1生成产品对象规则，可以是一类产品的规则</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductFactory2</span> <span class="keyword">implements</span> <span class="title class_">IProductFactory</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> IProduct <span class="title function_">createProduct</span><span class="params">(String productNo)</span>&#123;</span><br><span class="line">		<span class="type">IProduct</span> <span class="variable">product</span> <span class="operator">=</span> xxx; <span class="comment">//工厂2生成产品对象规则，可以是一类产品的规则</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductFactory3</span> <span class="keyword">implements</span> <span class="title class_">IProductFactory</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> IProduct <span class="title function_">createProduct</span><span class="params">(String productNo)</span>&#123;</span><br><span class="line">		<span class="type">IProduct</span> <span class="variable">product</span> <span class="operator">=</span> xxx; <span class="comment">//工厂3生成产品对象规则，可以是一类产品的规则</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里与三个工厂，但是不需要把这3个代码全部提供给调用者，因为这样会造成选择困难。为此使用一个公用的工厂，由他来提供规则选择工厂。</p>
+<ul>
+<li>产品编号以1开头的用工厂<code>ProductFactory1</code>创建对象</li>
+<li>产品编号以2开头的用工厂<code>ProductFactory2</code>创建对象</li>
+<li>产品编号以3开头的用工厂<code>ProductFactory3</code>创建对象</li>
+</ul>
+<p>根据上面的假定规则完成一个公共的工厂——ProductFactory</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductFactory</span> <span class="keyword">implements</span> <span class="title class_">IProductFactory</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> IProduct <span class="title function_">createProduct</span><span class="params">(String productNo)</span>&#123;</span><br><span class="line">		<span class="type">char</span> <span class="variable">ch</span> <span class="operator">=</span> productNo.chartAt(<span class="number">0</span>);</span><br><span class="line">		<span class="type">IProductFactory</span> <span class="variable">factory</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">		<span class="keyword">if</span>(ch == <span class="string">&#x27;1&#x27;</span>)&#123;</span><br><span class="line">			factory = <span class="keyword">new</span> <span class="title class_">ProductFactory1</span>();</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(ch == <span class="string">&#x27;2&#x27;</span>)&#123;</span><br><span class="line">			factory = <span class="keyword">new</span> <span class="title class_">ProductFactory2</span>();</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(ch == <span class="string">&#x27;3&#x27;</span>)&#123;</span><br><span class="line">			factory = <span class="keyword">new</span> <span class="title class_">ProductFactory3</span>();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(factory != <span class="literal">null</span> )&#123;</span><br><span class="line">			<span class="keyword">return</span> factory.createProduct(productNo);</span><br><span class="line">		&#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过抽象工厂可以知道只需要知道产品编号——productNo，就能通过ProductFactory创建产品的对象了。这样调用者不需要去理会ProductFactory选择使用哪个具体工厂的规则。</p>
+<h2 id="2-5-建造者（Builder）模式"><a href="#2-5-建造者（Builder）模式" class="headerlink" title="2.5 建造者（Builder）模式"></a>2.5 建造者（Builder）模式</h2><h3 id="2-5-1-概述"><a href="#2-5-1-概述" class="headerlink" title="2.5.1 概述"></a>2.5.1 概述</h3><p>建造者模式属于对象的创建模式。可以将一个产品的内部表象（属性）与产品的生成过程分割开来，从而使一个建造过程生成具有不同的内部表象的产品对象。</p>
+<p>在大部分情况下都可以使用new关键字或者工厂模式来创建对象，但是有些对象却比较复杂，比如一些旅游套票可以分为：普通成年人、退休老人等等，他们都有不同的规定和优惠。</p>
+<img src="./images/image-20220626130603176.png" alt="image-20220626130603176" style="zoom:33%;" />
+
+<p>我们由配置类一次性构建一种票，步步推进，当所有的票已经构建结束，我们会通过构建器来构建套票对象</p>
+<h3 id="2-5-2-Builder模式实例"><a href="#2-5-2-Builder模式实例" class="headerlink" title="2.5.2 Builder模式实例"></a>2.5.2 Builder模式实例</h3><p>创建一个TicketHelper对象，它是配置类，能帮我们一步步的完成构建对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TicketHelper</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buildAdult</span><span class="params">(String info)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;构建成年人票逻辑：&quot;</span>+info);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buildChildrenForSeat</span><span class="params">(String info)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;构建有座儿童票逻辑：&quot;</span>+info);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buildChildrenNoSeat</span><span class="params">(String info)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;构建无座儿童票逻辑：&quot;</span>+info);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buildElderly</span><span class="params">(String info)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;构建老年人票逻辑：&quot;</span>+info);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buildSoldier</span><span class="params">(String info)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;构建军人票逻辑：&quot;</span>+info);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里只是模拟，用打印信息代替真正的逻辑</p>
+</blockquote>
+<p>需要一个构建类<code>TicketBuilder</code>，它只有一个配置类的参数，通过它即可获得所有套票的信息，从而构建套票对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TicketBuilder</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">builder</span><span class="params">(TicketHelper helper)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;通过TicketHelper构建套票信息&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过以下代码，来完成套票对象的构建：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">TicketHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TicketHelper</span>();</span><br><span class="line">        helper.buildAdult(<span class="string">&quot;成人票&quot;</span>);</span><br><span class="line">        helper.buildChildrenForSeat(<span class="string">&quot;有座儿童&quot;</span>);</span><br><span class="line">        helper.buildChildrenNoSeat(<span class="string">&quot;无座儿童&quot;</span>);</span><br><span class="line">        helper.buildElderly(<span class="string">&quot;老人票&quot;</span>);</span><br><span class="line">        helper.buildSoldier(<span class="string">&quot;军人票&quot;</span>);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">ticket</span> <span class="operator">=</span> TicketBuilder.builder(helper);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>构建模式的使用就是构建分为好几步，通过一步步构建信息，把一个复杂的对象构建出来。</p>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JavaEE/"># JavaEE</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/06/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8(1-4%E8%8A%82)/">数据库原理与应用 第1-4节</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Jerry Wei | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
