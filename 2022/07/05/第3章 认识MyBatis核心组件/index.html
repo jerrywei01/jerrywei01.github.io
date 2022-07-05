@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Jerry Wei">
+
+
+
+
+
+<title>【JavaEE】第3章 认识MyBatis核心组件 | JerryWei&#39;s Web</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Jerry&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Jerry&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【JavaEE】第3章 认识MyBatis核心组件</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Jerry Wei</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 5, 2022&nbsp;&nbsp;13:23:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/JavaEE%E5%B0%8F%E7%99%BD%E4%B9%8B%E8%B7%AF/">JavaEE小白之路</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="第3章-认识MyBatis核心组件"><a href="#第3章-认识MyBatis核心组件" class="headerlink" title="第3章 认识MyBatis核心组件"></a>第3章 认识MyBatis核心组件</h1><h2 id="3-1-持久层的概念与Mybatis的特点"><a href="#3-1-持久层的概念与Mybatis的特点" class="headerlink" title="3.1 持久层的概念与Mybatis的特点"></a>3.1 持久层的概念与Mybatis的特点</h2><p>持久层可以将<strong>业务数据</strong>存储到<strong>硬盘</strong>，具有<strong>长期存储能力</strong>，只要硬盘不损坏（大部分的重要数据都会有相关的备份机制），在断电或者其他情况下，重新开启系统仍然可以读取这些数据。一般执行持久任务的是数据库系统，持久层可以使用巨大的磁盘空间，也比较廉价，它的缺点就是慢，在互联网的快速环境下，极有可能宕机，在这样的场景下考虑使用Redis（NoSQL）处理它。</p>
+<p>Java互联网可以通过MyBatis框架访问数据库，教材作者认为MyBatis最大的成功有三点：</p>
+<ul>
+<li><strong>不屏蔽SQL</strong>——更为精准的定位SQL语句</li>
+<li><strong>提供强大、灵活的映射机制</strong>——方便JAVA开发者使用</li>
+<li><strong>提供了Mapper的接口编程</strong>，只要一个接口和XML就能创建映射器。</li>
+</ul>
+<h2 id="3-2-Mybatis环境"><a href="#3-2-Mybatis环境" class="headerlink" title="3.2 Mybatis环境"></a>3.2 Mybatis环境</h2><p>书内环境：Mybatis - 3.4.1</p>
+<p>Github仓库地址：<a target="_blank" rel="noopener" href="https://github.com/mybatis/mybatis-3/releases?page=2">Mybatis-3</a></p>
+<h2 id="3-3-Mybatis的核心组件"><a href="#3-3-Mybatis的核心组件" class="headerlink" title="3.3 Mybatis的核心组件"></a>3.3 Mybatis的核心组件</h2><p>Mybatis的“表面现象”——<strong>组件</strong></p>
+<ul>
+<li><strong><code>SqlSessionFactoryBuilder</code>（构造器）</strong>：它会根据配置或者代码来生成<code>SqlSessionFactory</code>，才用的是分布构建的Builder模式。</li>
+<li><strong><code>SqlSessionFactory</code>（工厂接口）</strong>：依靠它来生成SqlSession，使用的是工厂模式</li>
+<li><strong><code>SqlSession</code>（会话）</strong>：一个<strong>既可以发送SQL执行返回结果</strong>，<strong>也可以获取Mapper</strong>的接口。在现有的技术中，一般我们会让其在业务逻辑代码中“消失“，而使用的是MyBatis提供的SQL Mapper接口编程技术，它能提高代码的可读性和可维护性。</li>
+<li><strong><code>SQL Mapper</code>（映射器）</strong>：MyBatis新设计存在的组件，它由一个Java接口和XML文件（或注解）构成，需要给出相应的SQL和映射规则。它负责发送SQL去执行并返回结果。</li>
+</ul>
+<img src="C:\Users\Jerry Wei\AppData\Roaming\Typora\typora-user-images\image-20220626141241365.png" alt="image-20220626141241365" style="zoom:33%;" />
+
+<blockquote>
+<p>注意，无论是映射器还是SqlSession都可以发送SQL到数据库执行，下面学习这些组件的用法。</p>
+</blockquote>
+<h2 id="3-4-SqlSessionFactory（工厂接口）"><a href="#3-4-SqlSessionFactory（工厂接口）" class="headerlink" title="3.4 SqlSessionFactory（工厂接口）"></a>3.4 SqlSessionFactory（工厂接口）</h2><p>使用Mybatis首先是配置或者代码去生产SqlSessionFactory，而Mybatis提供了构造器SqlSessionFactoryBuilder。它提供了一个类作为引导，采用的是Builder模式。具体的分步则是在Configuration类里面完成的。</p>
+<p>XML的形式比较简易，当配置了XML或者提供代码后，MyBatis会读取配置文件，通过Configuration类对象构建整个MyBatis的上下文。</p>
+<blockquote>
+<p>注意：SqlSessionFactory是一个接口，在Mybatis中它存在两个实现类：SqlSessionManager和DefaultSqlSessionFactory。一般而言，具体是由后者去实现的，而前者在多线程中的环境中使用，具体实现依靠后者。</p>
+</blockquote>
+<img src="C:\Users\Jerry Wei\AppData\Roaming\Typora\typora-user-images\image-20220626145001493.png" alt="image-20220626145001493" style="zoom: 33%;" />
+
+<p>每个基于MyBatis的应用都是以一个SqlSessionFactory的实例为中心的，而SqlSessionFactory唯一的作用就是生产MyBatis的核心接口对象SqlSession，所以他的责任是唯一的。我们往往会采用单例模式去处理它。</p>
+<h3 id="3-4-1-使用XML构建SqlSessionFactory"><a href="#3-4-1-使用XML构建SqlSessionFactory" class="headerlink" title="3.4.1 使用XML构建SqlSessionFactory"></a>3.4.1 使用XML构建SqlSessionFactory</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">configuration</span></span></span><br><span class="line"><span class="meta">	<span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Config 3.0//ZH&quot;</span></span></span><br><span class="line"><span class="meta">	<span class="string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">typeAliases</span>&gt;</span><span class="comment">&lt;!-- 别名 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">typeAlias</span> <span class="attr">alias</span>=<span class="string">&quot;role&quot;</span> <span class="attr">type</span>=<span class="string">&quot;com.jerry.Role&quot;</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">typeAliases</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 数据库环境 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;environment&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>/&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/javaee&quot;</span>/&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 映射文件 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/mapper/RoleMapper.xml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Mybatis基础配置文件：</p>
+<ul>
+<li><code>&lt;typeAlias&gt;</code>元素定义了一个别名role，它代表着<code>com.jerry.Role</code>这个类。这样定义后，Mybatis的上下文中就可以使用别名去代替全限定名了</li>
+<li><code>&lt;environment&gt;</code>元素的定义，这里描述的是数据库，他里面的<code>&lt;transactionManager&gt;</code>元素是配置事务管理器，这里采用的是Mybatis的JDBC管理器方式，然后采用<code>&lt;dateSource&gt;</code>元素配置数据库，其中属性type&#x3D;”POOLED”代表采用MyBatis内部提供的连接池方式，最后定义一些关于JDBC的属性信息。</li>
+<li><code>&lt;Mapper&gt;</code>元素代表引入的那些映射器</li>
+</ul>
+<p>有了配置文件，就可以生成SqlSessionFactory了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">SqlSessionFactory</span> <span class="variable">SqlSessionFactory</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">		<span class="type">String</span> <span class="variable">resource</span> <span class="operator">=</span> <span class="string">&quot;MyBatis.xml&quot;</span>;</span><br><span class="line">		InputStream inputStream;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">			SqlSessionFactory = <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBuilder</span>().build(inputStream);</span><br><span class="line">		&#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先读取<code>mybatis-config.xml</code>，然后通过SqlSessionFactoryBuilder的Builder方法去创建SqlSessionFactory。</p>
+<h3 id="3-4-2-使用代码创建SqlSessionFactory"><a href="#3-4-2-使用代码创建SqlSessionFactory" class="headerlink" title="3.4.2 使用代码创建SqlSessionFactory"></a>3.4.2 使用代码创建SqlSessionFactory</h3><p>不推荐但需要了解，代码实现与XML实现是一样的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">PooledDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PooledDataSource</span>();</span><br><span class="line">dataSource.setDriver(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">dataSource.setUsername(<span class="string">&quot;root&quot;</span>);</span><br><span class="line">dataSource.setPassword(<span class="string">&quot;root&quot;</span>);</span><br><span class="line">dataSource.setUrl(<span class="string">&quot;jdbc:mysql://localhost:3306/javaee&quot;</span>);</span><br><span class="line">dataSource.setDefaultAutoCommit(<span class="literal">false</span>);</span><br><span class="line"><span class="comment">//采用Batis的JDBC事务方式</span></span><br><span class="line"><span class="type">TransactionFactory</span> <span class="variable">transactionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JdbcTransactionFactory</span>();</span><br><span class="line"><span class="type">Environment</span> <span class="variable">environment</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Environment</span>(<span class="string">&quot;development&quot;</span>,transactionFactory,dataSource);</span><br><span class="line"><span class="type">Configuration</span> <span class="variable">configuration</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Configuration</span>(environment);</span><br><span class="line">configuration.getTypeAliasRegistry().registerAlias(<span class="string">&quot;role&quot;</span>,Role.class);</span><br><span class="line"><span class="comment">//加入一个映射器</span></span><br><span class="line">configuration.addMapper(RoldMapper.class);</span><br><span class="line"><span class="comment">//使用SqlSessionFactoryBuilder构建SqlSessionFactory</span></span><br><span class="line"><span class="type">SqlSessionFactory</span> <span class="variable">SqlSessionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBuilder</span>().build(configuration);</span><br><span class="line"><span class="keyword">return</span> SqlSessionFactory;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-5-SqlSession"><a href="#3-5-SqlSession" class="headerlink" title="3.5 SqlSession"></a>3.5 SqlSession</h2><p>在MyBatis中，SqlSession是其核心接口，在MyBatis中有两个实现类，<code>DefaultSqlSession</code>与<code>SqlSessionManager</code>。前者单线程使用，后者多线程使用。</p>
+<p>SqlSession的作用类似于JDBC中的Connection对象，代表着一个<strong>链接资源的启用</strong>。作用如下</p>
+<ul>
+<li><strong>获取Mapper接口</strong></li>
+<li><strong>发送SQL给数据库</strong></li>
+<li><strong>控制数据库事务</strong></li>
+</ul>
+<p>创建SqlSession方法：<code>SqlSession sqlSession = SQlSessionFactory.openSession();</code></p>
+<p>是一个门面接口</p>
+<p>SqlSession控制数据库事务的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义SqlSession</span></span><br><span class="line"><span class="type">SqlSession</span> <span class="variable">sqlSession</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">	<span class="comment">//打开SqlSession会话</span></span><br><span class="line">	sqlSession = SqlSessionFactory.openSession();</span><br><span class="line">	<span class="comment">//some code...</span></span><br><span class="line">	sqlSession.commit();<span class="comment">//提交事务</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">    sqlSession.rollback();</span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(SqlSession != <span class="literal">null</span>)&#123;</span><br><span class="line">        sqlSession.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-6-映射器"><a href="#3-6-映射器" class="headerlink" title="3.6 映射器"></a>3.6 映射器</h2><p>映射器由<strong>一个接口</strong>和<strong>相对应的XML文件</strong>（或<strong>注解</strong>）组成，它可以配置以下内容：</p>
+<ul>
+<li><strong>描述映射规则</strong></li>
+<li><strong>提供SQL语句。并可以配置SQL参数类型、返回类型、缓存刷新等信息</strong></li>
+<li><strong>配置缓存</strong></li>
+<li><strong>提供动态SQL</strong></li>
+</ul>
+<p>本节阐述两种实现映射器的方式：XML方式与注解形式。</p>
+<p>在此之前，先定义一个POJO</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.ssm.chapter3.pojo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Role</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> Long id;</span><br><span class="line">	<span class="keyword">private</span> String roleName;</span><br><span class="line">	<span class="keyword">private</span> String note;</span><br><span class="line">	<span class="keyword">public</span> Long <span class="title function_">getId</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setId</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.id = id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getRoleName</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> roleName;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setRoleName</span><span class="params">(String roleName)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.roleName = roleName;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getNote</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> note;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNote</span><span class="params">(String note)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.note = note;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>映射器的作用就将SQL查询到的结果映射为一个POJO，或者将POJO的数据插入到数据库中，并定义一些关于缓存等的重要内容。</p>
+<h3 id="3-6-1用XML实现映射器"><a href="#3-6-1用XML实现映射器" class="headerlink" title="3.6.1用XML实现映射器"></a>3.6.1用XML实现映射器</h3><p>XML定义映射分为两个部分：插口和XML。</p>
+<p>定义一个映射器接口，如代码所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.learn.ssm.chapter3.pojo.Role;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RoleMapper</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> Role <span class="title function_">getRole</span><span class="params">(Long id)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用XML方式创建映射器：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span></span></span><br><span class="line"><span class="meta">	<span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//ZH&quot;</span></span></span><br><span class="line"><span class="meta">	<span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.learn.ssm.chapter3.mapper.RoleMapper&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getRole&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;long&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;role&quot;</span>&gt;</span></span><br><span class="line">			select id,role_name as roleName,note from t_role where id = #&#123;id&#125;</span><br><span class="line">		<span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>&lt;mapper&gt;</code>元素中的属性<code>namespace</code>所对应的是一个接口的全限定名。</li>
+<li><code>&lt;select&gt;</code>元素表明这是一条查询语句，而属性id标识了这条SQL，属性<code>parameterType=&quot;long&quot;</code>说明传递给SQL是一个long型的参数，而<code>resultType=&quot;role&quot;</code>表示返回的是一个role类型的返回值。而role是之前配置文件<code>mybatis-config.xml</code>配置的别名，指代的是<code>com.learn.ssm.chapter3.pojo.Role</code></li>
+<li>这条SQL中的#{id}表示传递的参数</li>
+<li></li>
+</ul>
+<h3 id="3-6-2-注解实现映射器"><a href="#3-6-2-注解实现映射器" class="headerlink" title="3.6.2 注解实现映射器"></a>3.6.2 注解实现映射器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.learn.ssm.chapter3.pojo.role</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RoleMapper2</span>&#123;</span><br><span class="line">	<span class="meta">@Select(&quot;select id, role_name as roleName , note from t_role where id = #&#123;id&#125;&quot;)</span></span><br><span class="line">	<span class="keyword">public</span> Role <span class="title function_">getRole</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-6-3-SqlSession-发送-SQL"><a href="#3-6-3-SqlSession-发送-SQL" class="headerlink" title="3.6.3 SqlSession 发送 SQL"></a>3.6.3 SqlSession 发送 SQL</h3><p>以getRole为例看看如何发送SQL</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Role</span> <span class="variable">role</span> <span class="operator">=</span> (Role)sqlSession</span><br><span class="line"><span class="title function_">selectOne</span><span class="params">(<span class="string">&quot;com.learn.ssm.chapter3.mapper.RoleMapper.getRole&quot;</span>,<span class="number">1L</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>selectOne</code>方法表示<strong>使用查询并且只返回一个对象</strong>，而参数则是一个<strong>String对象</strong>和一个<strong>Object对象</strong>。</p>
+<p>这里只是一个<strong>long参数</strong>，long参数是它的主键</p>
+<p>String对象是由一个命名空间加上SQL id组合而成的，它完全定位了一条SQL，这样MyBatis就会找到相对于的SQL，如果在MyBatis中只有一个id为<code>getRole</code>的SQL，那么也可以简写为：</p>
+<p><code>Role role = (Role)sqlSession.selectOne(&quot;getRole&quot;,1L);</code></p>
+<p>这是MyBatis的前身iBatis留下的方式。</p>
+<h3 id="3-6-4-用Mapper接口发送-SQL"><a href="#3-6-4-用Mapper接口发送-SQL" class="headerlink" title="3.6.4 用Mapper接口发送 SQL"></a>3.6.4 用Mapper接口发送 SQL</h3><p>SqlSession还可以获取Mapper接口，通过Mapper接口发送SQL</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">RoleMapper</span> <span class="variable">roleMapper</span> <span class="operator">=</span> sqlSession.getMapper(RoleMapper.class);</span><br><span class="line"><span class="type">Role</span> <span class="variable">role</span> <span class="operator">=</span> roleMapper.getRole(<span class="number">1L</span>);</span><br></pre></td></tr></table></figure>
+
+<p>通过SqlSession的<strong>getMapper</strong>方法来获取一个Mapper接口，就可以调用它的方法了。</p>
+<h3 id="3-6-5-对比两种发送方式"><a href="#3-6-5-对比两种发送方式" class="headerlink" title="3.6.5 对比两种发送方式"></a>3.6.5 对比两种发送方式</h3><p>建议采用SqlSession获取Mapper的方式</p>
+<ul>
+<li>使用Mapper接口编程可以<strong>消除SqlSession带来的功能性代码</strong>，<strong>提高可读性</strong>，而SqlSession发送SQL，需要一个SQL id去匹配SQL，比较晦涩难懂。使用Mapper接口，类似<code>roleMapper.getRole(1L)</code>则是完全面向对象的语言，更能体现业务的逻辑。</li>
+<li>使用<code>Mapper.getRole(1L)</code>方式，IDE会提示错误和校验，而使用<code>sqlSession.selectOne(&quot;getRole&quot;,1L)</code>语法，只有在运行中才能知道是否会产生错误。</li>
+</ul>
+<h2 id="3-7-生命周期"><a href="#3-7-生命周期" class="headerlink" title="3.7 生命周期"></a>3.7 生命周期</h2><p>MyBatis常用于多线程的环境中，错误使用会造成严重的多线程并发问题，为了正确编写MyBatis的应用程序，我们需要掌握MyBatis组件的生命周期。所谓生命周期就是每一个对象应该存活的时间，避免继续占用资源。</p>
+<h3 id="3-7-1-SqlSessionFactoryBuilder"><a href="#3-7-1-SqlSessionFactoryBuilder" class="headerlink" title="3.7.1 SqlSessionFactoryBuilder"></a>3.7.1 SqlSessionFactoryBuilder</h3><p>创建完SqlSessionFactory后就失去作用</p>
+<h3 id="3-7-2-SqlSessionFactory"><a href="#3-7-2-SqlSessionFactory" class="headerlink" title="3.7.2 SqlSessionFactory"></a>3.7.2 SqlSessionFactory</h3><p>SqlSessionFactory的生命周期等同于MyBatis的应用周期。</p>
+<p>为了避免多个数据库连接池导致链接资源被耗光，因此一般应用时往往希望SqlSessionFactory作为单例在应用中被共享。</p>
+<h3 id="3-7-3-SqlSession"><a href="#3-7-3-SqlSession" class="headerlink" title="3.7.3 SqlSession"></a>3.7.3 SqlSession</h3><p>SQLSessionFactory若好比数据库连接池，则SqlSession好比数据库连接(Connetion对象)</p>
+<p>它应该存活在一个业务请求中，处理完整个请求后就关闭这条连接。</p>
+<h3 id="3-7-4-Mapper"><a href="#3-7-4-Mapper" class="headerlink" title="3.7.4 Mapper"></a>3.7.4 Mapper</h3><p>生命周期小于等于SqlSession的生命周期。Mapper代表的是一个请求中的业务处理，所以他应该在一个请求中，一旦处理完了相关业务就应该废弃他。</p>
+<img src="images/image-20220626164552122.png" alt="image-20220626164552122" style="zoom: 25%;" />
+
+<h2 id="3-8-实例"><a href="#3-8-实例" class="headerlink" title="3.8 实例"></a>3.8 实例</h2><img src="images/image-20220627105844301.png" alt="image-20220627105844301" style="zoom:33%;" />
+
+<blockquote>
+<p>log4j.properties</p>
+<blockquote>
+<p>把它设置为DEBUG级别，让它能够把最详细的日志打印处理，以便调试，在生产中，我们可以设置为INFO级别</p>
+</blockquote>
+</blockquote>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">log4j.rootLogger</span>=<span class="string">DEBUG , stdout</span></span><br><span class="line"><span class="attr">log4j.looger.org.mybatis</span>=<span class="string">DEBUG</span></span><br><span class="line"><span class="attr">log4j.appender.stdout</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="attr">log4j.appender.stdout.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="attr">log4j.appender.stdout.layout.ConversionPattern</span>=<span class="string">%5p %d %C: %m%n</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Role.java</p>
+<blockquote>
+<p>构造一个POJO对象，最终的查询会映射到它上面，或者将其保存到数据库中</p>
+</blockquote>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Role</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> Long id;</span><br><span class="line">	<span class="keyword">private</span> String roleName;</span><br><span class="line">	<span class="keyword">private</span> String note;</span><br><span class="line">	<span class="comment">/**getter and setter**/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>RoleMapper.java</p>
+<blockquote>
+<p>采用XML方式构建映射器，它包含一个接口和一个XML。这里要实现增删改查，所以定义一个接口。其中，insertRole代表插入一个Role对象；deleteRole则是删除；updateRole是修改一个Role对象；getRole是获取一个Role对象；findRoles则是通过角色名称获取一个角色对象列表。</p>
+</blockquote>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.ssm.chapter3.mapper;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> com.learn.ssm.chapter3.pojo.Role;</span><br><span class="line"><span class="comment">//映射器的接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RoleMapper</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">insertRole</span><span class="params">(Role role)</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">deleteRole</span><span class="params">(Long id)</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">updateRole</span><span class="params">(Role role)</span>;</span><br><span class="line">	<span class="keyword">public</span> Role <span class="title function_">getRole</span><span class="params">(Long id)</span>;</span><br><span class="line">	<span class="keyword">public</span> List&lt;Role&gt; <span class="title function_">findRoles</span><span class="params">(String roleName)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>RoleMapper.xml</p>
+<blockquote>
+<p>通过一个XML描述这些功能。XML中都是比较简单的SQL语句，增删改查语句中的元素id则标识了对应的SQL。parameterType标出了是什么类型的参数，resultType则代表结果映射成为什么类型。其中insert、delete和update返回的都是影响条数</p>
+</blockquote>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 映射器XML文件，描述映射关系、SQL等内容 --&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span></span></span><br><span class="line"><span class="meta">	<span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//ZH&quot;</span></span></span><br><span class="line"><span class="meta">	<span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.learn.ssm.chapter3.mapper.RoleMapper&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span> =<span class="string">&quot;insertRole&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;role&quot;</span>&gt;</span></span><br><span class="line">		insert into t_role(role_name,note) values(#&#123;roleName&#125;,#&#123;note&#125;)</span><br><span class="line">	<span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteRole&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;long&quot;</span>&gt;</span></span><br><span class="line">		delete from t_role where id= #&#123;id&#125;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;updateRole&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;role&quot;</span>&gt;</span></span><br><span class="line">		update t_role set role_name = #&#123;roleName&#125;,note=#&#123;note&#125; where id = #&#123;id&#125;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getRole&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;long&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;role&quot;</span>&gt;</span></span><br><span class="line">		select id,role_name as roleName,note from t_role where id = #&#123;id&#125;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findRoles&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;string&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;role&quot;</span>&gt;</span></span><br><span class="line">		select id,role_name as roleName,note from t_role</span><br><span class="line">		where role_name like concat(&#x27;%&#x27;,#&#123;roleName&#125;,&#x27;%&#x27;&quot;)</span><br><span class="line">	<span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<blockquote>
+<p>有了他们就可以开始构建SqlSessionFactory，首先完成mybatis-config.xml文件</p>
+</blockquote>
+<p>mybatis-config.xml</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Mybatis配置文件 --&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">configuration</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">	<span class="string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">typeAliases</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">typeAlias</span> <span class="attr">alias</span>=<span class="string">&quot;role&quot;</span> <span class="attr">type</span>=<span class="string">&quot;com.learn.ssm.chapter3.pojo.Role&quot;</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">typeAliases</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 数据库环境 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span> /&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/ssm&quot;</span> /&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span> /&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/learn/ssm/chapter3/mapper/RoleMapper.xml&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<blockquote>
+<p>使用mybatis-config.xml文件，通过SQLSessionFactoryBuilder来构建SqlSessionFactory。由于SqlSessionFactory应该采用单例模式，所以这里采用单例模式去构建他。</p>
+</blockquote>
+<p>SqlSessionFactoryUtils.java</p>
+<blockquote>
+<p>构造方法中加入了private关键字，使得其他代码不能通过new的方式来创建它。而加入synchronized关键字加锁，主要是防止在多线程中多次实例化SqlSessionFactory对象，从而保证SqlSessionFactory的唯一性。</p>
+</blockquote>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.ssm.chapter3.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.io.Resources;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSession;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSessionFactory;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSessionFactoryBuilder;</span><br><span class="line"></span><br><span class="line"><span class="comment">//一个工具类，用于创建SqlSessionFactory和获取SqlSession对象</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SqlSessionFactoryUtils</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> Class&lt;SqlSessionFactoryUtils&gt; LOCK = SqlSessionFactoryUtils.class;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="type">SqlSessionFactory</span> <span class="variable">sqlSessionFactory</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="title function_">SqlSessionFactoryUtils</span><span class="params">()</span> &#123; &#125;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> SqlSessionFactory <span class="title function_">getSqlSessionFactory</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">synchronized</span>(LOCK)&#123;</span><br><span class="line">			<span class="keyword">if</span>(sqlSessionFactory != <span class="literal">null</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> sqlSessionFactory;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="type">String</span> <span class="variable">resource</span> <span class="operator">=</span> <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">			InputStream inputStream;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">				sqlSessionFactory = <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBuilder</span>().build(inputStream);</span><br><span class="line">			&#125;<span class="keyword">catch</span>(IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> sqlSessionFactory;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> SqlSession <span class="title function_">openSqlSession</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">if</span>(sqlSessionFactory == <span class="literal">null</span>) &#123;</span><br><span class="line">			getSqlSessionFactory();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> sqlSessionFactory.openSession();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Chapter3Main.java</p>
+</blockquote>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JavaEE/"># JavaEE</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/06/26/%E7%AC%AC2%E7%AB%A0%20Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">【JavaEE】第2章 Java设计模式</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Jerry Wei | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
